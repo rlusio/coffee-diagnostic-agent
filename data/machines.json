@@ -1,0 +1,303 @@
+[
+  {
+    "brand": "DeLonghi",
+    "model": "ETAM29.660",
+    "series": null,
+    "construction_tags": [],
+    "notes": "Wpis przykładowy z poprzedniej wersji. Elementy konstrukcyjne wymagają sprawdzenia dla pełnego wariantu modelu.",
+    "source": {
+      "type": "placeholder",
+      "reference": "Brak dokumentacji modelu w bazie"
+    },
+    "verified": false,
+    "catalog_verified": false
+  },
+  {
+    "brand": "Saeco",
+    "model": null,
+    "series": "GranAroma",
+    "construction_tags": [
+      "removable_inner_frame_reported"
+    ],
+    "notes": "Użytkownik opisał konstrukcje GranAroma z wyjmowanym wewnętrznym zespołem. Nie ustalono listy modeli, do których odnosi się obserwacja.",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "catalog_verified": false
+  },
+  {
+    "brand": "Siemens",
+    "model": null,
+    "series": "EQ.9",
+    "construction_tags": [],
+    "notes": "Hipoteza użytkownika o spuście podobnym do niektórych DeLonghi; nie wpisano jako potwierdzonej usterki.",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "catalog_verified": false
+  },
+  {
+    "brand": "DeLonghi",
+    "model": null,
+    "series": "Magnifica S",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.delonghi.com/pl-pl/e/kawa/ekspresy-automatyczne/magnifica"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "DeLonghi",
+    "model": null,
+    "series": "Magnifica Evo",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.delonghi.com/pl-pl/e/kawa/ekspresy-automatyczne/magnifica"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "DeLonghi",
+    "model": null,
+    "series": "Dinamica Plus",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.delonghi.com/pl-pl/c/ekspresy-i-akcesoria-do-kawy/ekspresy-do-kawy/automatyczne-ekspresy-do-kawy"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "DeLonghi",
+    "model": null,
+    "series": "Eletta Explore",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.delonghi.com/pl-pl/e/kawa/ekspresy-automatyczne/eletta-explore"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Philips",
+    "model": null,
+    "series": "2200",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.philips.pl/c-p/EP2236_40R1/series-2200-fully-automatic-espresso-machines"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Philips",
+    "model": null,
+    "series": "3200",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.philips.pl/c-p/EP3246_70R1/series-3200-automatyczny-ekspres-do-kawy/pomoc"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Philips",
+    "model": null,
+    "series": "4300",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.usa.philips.com/etc/philips/b2c/compareproducts.html?catalog=CONSUMER&ctn=EP3241%2F54%2CEP4347%2F94%2CEP5447%2F94&locale=en_US"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Philips",
+    "model": null,
+    "series": "5400",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.usa.philips.com/etc/philips/b2c/compareproducts.html?catalog=CONSUMER&ctn=EP3241%2F54%2CEP4347%2F94%2CEP5447%2F94&locale=en_US"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Saeco",
+    "model": null,
+    "series": "Xelsis",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://saeco.com/pl-PL/xelsis/"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Saeco",
+    "model": null,
+    "series": "GranAroma Deluxe",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://saeco.com/pl-PL/granaroma/granaroma-deluxe/"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Melitta",
+    "model": null,
+    "series": "Barista TS Smart",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.melitta.pl/bean-to-cup-machines/our-categories/all-bean-to-cup-machines/Melitta-Barista-TS-Smart"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Melitta",
+    "model": null,
+    "series": "CI Touch",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.melitta.pl/footer-navi/melitta-expert-advice/FAQ/Bean-to-cup-machines/CI-Touch"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Melitta",
+    "model": null,
+    "series": "Solo",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.melitta.pl/footer-navi/melitta-expert-advice/FAQ/Bean-to-cup-machines/Solo"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Siemens",
+    "model": null,
+    "series": "EQ.6 plus",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.siemens-home.bsh-group.com/pl/pl/category-page/ekspresy-do-kawy/automatyczne-ekspresy-do-kawy-wolnostojace/ekspres-automatyczny-eq6"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Siemens",
+    "model": null,
+    "series": "EQ700",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.siemens-home.bsh-group.com/pl/pl/category-page/ekspresy-do-kawy/automatyczne-ekspresy-do-kawy-wolnostojace"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Jura",
+    "model": null,
+    "series": "E8",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.jura.com/en/homeproducts/automatic-coffee-machines"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Jura",
+    "model": null,
+    "series": "S8",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.jura.com/en/homeproducts/automatic-coffee-machines"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Jura",
+    "model": null,
+    "series": "ENA 8",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.jura.com/en/homeproducts/automatic-coffee-machines"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Krups",
+    "model": null,
+    "series": "Evidence",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.krups.com.pl/evidence"
+    },
+    "catalog_verified": true,
+    "verified": false
+  },
+  {
+    "brand": "Krups",
+    "model": null,
+    "series": "Intuition",
+    "construction_tags": [],
+    "notes": "Istnienie rodziny/serii potwierdzone stroną producenta. Brak zweryfikowanego schematu konstrukcji ani potwierdzonej zgodności z usterkami.",
+    "source": {
+      "type": "manufacturer_catalog",
+      "reference": "https://www.krups.com.pl/intuition"
+    },
+    "catalog_verified": true,
+    "verified": false
+  }
+]

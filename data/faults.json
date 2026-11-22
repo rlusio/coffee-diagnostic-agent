@@ -1,0 +1,1444 @@
+[
+  {
+    "id": "water_no_flow_001",
+    "category": "water_system",
+    "component": "hydraulic_circuit",
+    "scope": "generic",
+    "symptoms": [
+      "brak przepływu wody",
+      "nie leci woda",
+      "pompa pracuje ale woda nie leci"
+    ],
+    "possible_causes": [
+      "niedrożna droga przepływu",
+      "powietrze w układzie",
+      "nieprawidłowa praca pompy"
+    ],
+    "diagnostic_questions": [
+      "Czy urządzenie podaje gorącą wodę?",
+      "Czy podczas próby poboru wody słychać pompę?"
+    ],
+    "safe_checks": [
+      "Sprawdź prawidłowe osadzenie zbiornika wody zgodnie z instrukcją użytkownika."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "illustrative",
+      "reference": "Przykład schematu danych; wymaga weryfikacji technicznej"
+    },
+    "verified": false,
+    "evidence_status": "illustrative"
+  },
+  {
+    "id": "brewing_no_coffee_001",
+    "category": "brewing_system",
+    "component": "brewing_unit",
+    "scope": "generic",
+    "symptoms": [
+      "mieli kawę ale kawa nie leci",
+      "nie podaje kawy",
+      "woda w tacce"
+    ],
+    "possible_causes": [
+      "problem z drogą przepływu podczas parzenia",
+      "problem z układem zaparzania"
+    ],
+    "diagnostic_questions": [
+      "Czy podawanie gorącej wody działa?",
+      "Czy woda pojawia się w tacce ociekowej?"
+    ],
+    "safe_checks": [
+      "Sprawdź komunikaty na wyświetlaczu i opisane w instrukcji użytkownika elementy wyjmowane bez narzędzi."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "illustrative",
+      "reference": "Przykład schematu danych; wymaga weryfikacji technicznej"
+    },
+    "verified": false,
+    "evidence_status": "illustrative"
+  },
+  {
+    "id": "grinder_no_grind_001",
+    "category": "grinder",
+    "component": "grinder",
+    "scope": "generic",
+    "symptoms": [
+      "nie mieli kawy",
+      "młynek nie mieli",
+      "brak mielenia"
+    ],
+    "possible_causes": [
+      "problem z doprowadzeniem ziaren",
+      "problem mechanizmu młynka"
+    ],
+    "diagnostic_questions": [
+      "Czy urządzenie wyświetla komunikat o braku ziaren?",
+      "Czy przy próbie przygotowania kawy słychać młynek?"
+    ],
+    "safe_checks": [
+      "Zweryfikuj poziom ziaren i ustawienia dostępne użytkownikowi."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "illustrative",
+      "reference": "Przykład schematu danych; wymaga weryfikacji technicznej"
+    },
+    "verified": false,
+    "evidence_status": "illustrative"
+  },
+  {
+    "id": "leak_external_generic",
+    "category": "water_leak",
+    "component": "hydraulic_system",
+    "scope": "generic_observation",
+    "symptoms": [
+      "wyciek wody pod ekspresem",
+      "kałuża pod urządzeniem",
+      "woda wypływa z obudowy"
+    ],
+    "possible_causes": [
+      "Nieszczelność złączki lub uszczelnienia",
+      "Uszkodzony przewód wodny",
+      "Przepełniona lub źle osadzona tacka ociekowa"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Sam punkt wypływu z obudowy nie musi wskazywać rzeczywistej lokalizacji nieszczelności.",
+    "liquid_destination": "outside"
+  },
+  {
+    "id": "leak_tray_generic",
+    "category": "water_leak",
+    "component": "drainage_system",
+    "scope": "generic_observation",
+    "symptoms": [
+      "woda w tacce ociekowej",
+      "tacka szybko się napełnia",
+      "dużo wody w tacce",
+      "przelewa się tacka ociekowa",
+      "tacka pełna przed komunikatem o opróżnieniu"
+    ],
+    "possible_causes": [
+      "Normalne odprowadzanie wody po płukaniu lub parzeniu w części modeli",
+      "Nieszczelność układu drenażu albo zaparzania",
+      "Problem z zaworem odprowadzającym wodę"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "Czy ilość wody jest nietypowo duża w porównaniu z wcześniejszą pracą urządzenia?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?",
+      "Czy tacka przepełnia się zanim pojawi się komunikat lub zadziała wskaźnik poziomu?",
+      "Po ilu napojach lub płukaniach tacka staje się pełna?",
+      "Czy dany model ma mechaniczny wskaźnik poziomu czy elektroniczny komunikat?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Woda w tacce nie jest sama w sobie dowodem awarii. Przykłady normalnego zrzutu potwierdzają materiały Philips i DeLonghi; zakres zależy od modelu. Zbyt duża ilość wody i przelewanie przed sygnałem to odrębny objaw, który wymaga analizy źródła dodatkowego odpływu oraz sposobu sygnalizacji.",
+    "liquid_destination": "drip_tray"
+  },
+  {
+    "id": "leak_brew_generic",
+    "category": "water_leak",
+    "component": "brewing_unit",
+    "scope": "generic_observation",
+    "symptoms": [
+      "wyciek z zaparzacza",
+      "woda przy zaparzaczu",
+      "pęknięty zaparzacz",
+      "woda w komorze zaparzacza"
+    ],
+    "possible_causes": [
+      "Pęknięcie elementu zespołu zaparzającego",
+      "Zużyte lub uszkodzone uszczelnienie układu zaparzania"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "Czy woda pojawia się przede wszystkim podczas parzenia kawy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Dotyczy wyłącznie urządzeń z odpowiednim zespołem zaparzającym; nie zakładać, że jest on wyjmowany.",
+    "liquid_destination": "brewing_area"
+  },
+  {
+    "id": "power_no_start_generic",
+    "category": "power_no_start",
+    "component": "electrical_system",
+    "scope": "generic_observation",
+    "symptoms": [
+      "ekspres się nie włącza",
+      "brak reakcji po włączeniu",
+      "ciemny wyświetlacz",
+      "brak zasilania"
+    ],
+    "possible_causes": [
+      "Brak zasilania zewnętrznego",
+      "Problem z przyciskiem lub połączeniem zasilania",
+      "Awaria zasilacza lub elektroniki sterującej"
+    ],
+    "diagnostic_questions": [
+      "Czy gniazdko zasila inne urządzenie?",
+      "Czy ekspres reaguje w jakikolwiek sposób (dioda, dźwięk, ekran)?",
+      "Czy awaria wystąpiła po przepięciu lub zalaniu?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Bez instrukcji rozbierania urządzenia lub pomiarów przy napięciu sieciowym."
+  },
+  {
+    "id": "heating_not_working_generic",
+    "category": "heating_temperature",
+    "component": "heating_system",
+    "scope": "generic_observation",
+    "symptoms": [
+      "ekspres nie grzeje",
+      "kawa jest zimna",
+      "brak nagrzewania",
+      "urządzenie długo się nagrzewa",
+      "kawa letnia",
+      "kawa za zimna",
+      "gorąca woda jest zimna",
+      "napój niedogrzany"
+    ],
+    "possible_causes": [
+      "Nieprawidłowa praca elementu grzejnego",
+      "Zadziałanie lub uszkodzenie zabezpieczenia termicznego",
+      "Nieprawidłowy odczyt czujnika temperatury NTC",
+      "Problem z układem sterowania"
+    ],
+    "diagnostic_questions": [
+      "Czy problem występuje podczas przygotowywania kawy, gorącej wody czy pary?",
+      "Czy pojawia się dokładny kod błędu?",
+      "Czy problem pojawił się nagle?",
+      "Czy woda z funkcji gorącej wody jest rzeczywiście gorąca?",
+      "Czy kawa była zbyt chłodna od początku czy problem pojawił się nagle?",
+      "Czy ekspres kończy nagrzewanie, czy sygnalizuje błąd?",
+      "Czy spienianie/parowanie działa poprawnie?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "NTC nie jest jedyną przyczyną problemów z temperaturą; bez modelu i kodu błędu nie przypisujemy mu konkretnego alarmu. Jednorazowa obserwacja naprawy modułu elektronicznego w DeLonghi nie oznacza, że problemy temperatury są zawsze spowodowane elektroniką."
+  },
+  {
+    "id": "milk_no_foam_generic",
+    "category": "milk_system",
+    "component": "milk_frother",
+    "scope": "generic_observation",
+    "symptoms": [
+      "nie spienia mleka",
+      "mleko nie leci",
+      "brak pianki",
+      "słabo spienia mleko"
+    ],
+    "possible_causes": [
+      "Zabrudzenie lub niedrożność części układu mlecznego",
+      "Nieszczelność układu zasysania mleka lub doprowadzania powietrza",
+      "Problem z doprowadzaniem pary albo wody",
+      "Awaria elementu sterującego przepływem w danej konstrukcji"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Rozróżnić brak poboru mleka, brak piany i zbyt niską temperaturę. Nie zakładać istnienia pojemnika mlecznego w każdym modelu."
+  },
+  {
+    "id": "milk_sputtering_generic",
+    "category": "milk_system",
+    "component": "milk_frother",
+    "scope": "generic_observation",
+    "symptoms": [
+      "mleko pluje",
+      "pluje mlekiem",
+      "mleko pryska",
+      "spienianie przerywa"
+    ],
+    "possible_causes": [
+      "Niedrożność kanału powietrznego lub mlecznego",
+      "Nieszczelność na połączeniu elementów systemu mlecznego",
+      "Niestabilny dopływ pary lub wody"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?",
+      "Czy problem występuje z tym samym pojemnikiem i wężykiem po czyszczeniu?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "To osobny objaw od sytuacji, w której mleko w ogóle nie jest pobierane."
+  },
+  {
+    "id": "delonghi_steam_vent_leak",
+    "category": "water_leak",
+    "component": "steam_vent",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z lewej strony przy grzałce",
+      "woda koło spustu pary",
+      "wyciek ze spustu przy grzałce"
+    ],
+    "possible_causes": [
+      "Nieszczelność w okolicy spustu pary obserwowanego w części konstrukcji"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "DeLonghi"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Obserwacja z serwisu: niektóre konstrukcje mają spust w tym miejscu. Nie uogólniać stwierdzenia o fabrycznym braku uszczelnienia na wszystkie modele.",
+    "liquid_destination": "left_side_near_heater",
+    "keywords": [
+      "spust pary",
+      "lewa strona grzałki"
+    ]
+  },
+  {
+    "id": "delonghi_grounds_infuser_leak",
+    "category": "water_leak",
+    "component": "infuser",
+    "scope": "brand_observation",
+    "symptoms": [
+      "woda w pojemniku na fusy",
+      "wyciek z przodu tacki",
+      "woda przy infuzorze"
+    ],
+    "possible_causes": [
+      "Zużyte uszczelnienia infuzora",
+      "Uszkodzony element infuzora",
+      "Inna nieszczelność drogi kawy lub drenażu"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "Czy fusy po parzeniu są nietypowo mokre?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "DeLonghi"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "grounds_container_or_tray_front"
+  },
+  {
+    "id": "delonghi_front_connector_leak",
+    "category": "water_leak",
+    "component": "front_hot_water_milk_connector",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek przy podłączeniu pojemnika na mleko",
+      "cieknie złącze dyszy gorącej wody",
+      "woda z przodu z przyłącza mleka"
+    ],
+    "possible_causes": [
+      "Zużyte uszczelki przyłącza",
+      "Problem z zaworem sterującym przepływem (do potwierdzenia w danym modelu)"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "DeLonghi"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Przed wskazaniem elektrozaworu należy ustalić model i dokładny przebieg wody.",
+    "liquid_destination": "front_accessory_connector"
+  },
+  {
+    "id": "saeco_granaroma_hose_solenoid_leak",
+    "category": "water_leak",
+    "component": "solenoid_hose_connector",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z wężyka przy elektrozaworach",
+      "wąż wypada przy elektrozaworach",
+      "woda koło przepływomierza"
+    ],
+    "possible_causes": [
+      "Poluzowane połączenie przewodu z elementem układu zaworowego"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": [
+        "GranAroma"
+      ]
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Obserwacja serwisowa. Nie traktować założenia opaski zaciskowej jako ogólnej zalecanej naprawy; rozwiązanie zależy od projektu połączenia i dokumentacji producenta.",
+    "liquid_destination": "inside_near_valve_assembly",
+    "keywords": [
+      "wąż elektrozawor przepływomierz",
+      "poluzowany wężyk"
+    ]
+  },
+  {
+    "id": "saeco_granaroma_heater_fitting_leak",
+    "category": "water_leak",
+    "component": "heater_fitting",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek na złączce grzałki",
+      "pęknięta złączka przy grzałce",
+      "woda przy wyjściu z grzałki"
+    ],
+    "possible_causes": [
+      "Pęknięcie złączki grzałki",
+      "Uszkodzone uszczelnienie połączenia"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": [
+        "GranAroma"
+      ]
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "heater_connection"
+  },
+  {
+    "id": "saeco_granaroma_solenoid_leak",
+    "category": "water_leak",
+    "component": "solenoid_valve_manifold",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z elektrozaworu",
+      "cieknie listwa elektrozaworów",
+      "wyciek z zespołu elektrozaworów"
+    ],
+    "possible_causes": [
+      "Nieszczelność elektrozaworu",
+      "Nieszczelność zespołu zaworowego lub połączeń"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": [
+        "GranAroma"
+      ]
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "inside_valve_block"
+  },
+  {
+    "id": "saeco_granaroma_hot_water_drain_leak",
+    "category": "water_leak",
+    "component": "hot_water_valve_or_fitting",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z zaworu gorącej wody do tacki",
+      "woda do tacki podczas gorącej wody",
+      "pęknięta złączka przy zaworze gorącej wody"
+    ],
+    "possible_causes": [
+      "Nieszczelność zaworu gorącej wody",
+      "Pęknięcie elementu łączącego układ zaworowy z drogą gorącej wody"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": [
+        "GranAroma"
+      ]
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Dokładny przebieg złączki i grzałki wymaga potwierdzenia w schemacie konkretnego modelu.",
+    "liquid_destination": "drip_tray_or_internal_connector"
+  },
+  {
+    "id": "melitta_drainage_valve_leak",
+    "category": "water_leak",
+    "component": "drainage_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z drenażu",
+      "woda przy zaworze drenażowym",
+      "tacka szybko napełnia się przez drenaż"
+    ],
+    "possible_causes": [
+      "Zużyte uszczelnienie drenażu",
+      "Nieszczelność elementu zaworu drenażowego"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Melitta"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "drainage_system"
+  },
+  {
+    "id": "melitta_ceramic_valve_leak",
+    "category": "water_leak",
+    "component": "ceramic_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z zaworu ceramicznego",
+      "woda przy zaworze ceramicznym"
+    ],
+    "possible_causes": [
+      "Nieszczelność zaworu ceramicznego (jeżeli model go posiada)"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Melitta"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Dotyczy wyłącznie modeli wyposażonych w zawór ceramiczny.",
+    "liquid_destination": "ceramic_valve"
+  },
+  {
+    "id": "siemens_ceramic_valve_leak",
+    "category": "water_leak",
+    "component": "ceramic_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z zaworu ceramicznego",
+      "woda spod zaworu ceramicznego"
+    ],
+    "possible_causes": [
+      "Nieszczelność zaworu ceramicznego w wyposażonych w niego modelach"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Siemens"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "ceramic_valve"
+  },
+  {
+    "id": "jura_ceramic_valve_leak",
+    "category": "water_leak",
+    "component": "ceramic_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z zaworu ceramicznego",
+      "woda przy zaworze ceramicznym"
+    ],
+    "possible_causes": [
+      "Nieszczelność zaworu ceramicznego w modelu, który go ma"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Jura"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Mniejsze doświadczenie serwisowe; nie uogólniać na całą ofertę Jura.",
+    "liquid_destination": "ceramic_valve"
+  },
+  {
+    "id": "krups_piston_seals_leak",
+    "category": "water_leak",
+    "component": "integrated_brewing_piston",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek przy tłoku",
+      "woda z okolicy tłoka zaparzającego",
+      "nieszczelność tłoka"
+    ],
+    "possible_causes": [
+      "Zużyte uszczelnienia tłoka w zintegrowanym mechanizmie zaparzania"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Krups"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "W wielu konstrukcjach Krups mechanizm zaparzania jest zintegrowany, a nie wyjmowany jako osobny moduł.",
+    "liquid_destination": "piston_area"
+  },
+  {
+    "id": "krups_actuator_leak",
+    "category": "water_leak",
+    "component": "brew_actuator",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z siłownika",
+      "woda przy siłowniku"
+    ],
+    "possible_causes": [
+      "Nieszczelność zespołu siłownika lub jego połączeń"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Krups"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "actuator_area"
+  },
+  {
+    "id": "krups_cooler_leak",
+    "category": "water_leak",
+    "component": "cooler_fitting",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek przy chłodniczce",
+      "cieknie chłodniczka"
+    ],
+    "possible_causes": [
+      "Nieszczelne połączenie elementu określanego w serwisie jako chłodniczka"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Krups"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Nazwa i funkcja tego komponentu powinny zostać powiązane z konkretnym schematem modelu.",
+    "liquid_destination": "cooler_area"
+  },
+  {
+    "id": "krups_two_bar_valve_leak",
+    "category": "water_leak",
+    "component": "two_bar_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z dwubara",
+      "woda z zaworu dwubarowego"
+    ],
+    "possible_causes": [
+      "Zużyte uszczelnienia zaworu dwubarowego",
+      "Uszkodzony zawór dwubarowy"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Krups"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "liquid_destination": "two_bar_valve"
+  },
+  {
+    "id": "siemens_milk_front_nozzle",
+    "category": "milk_system",
+    "component": "front_milk_nozzle_or_ceramic_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "siemens nie spienia mleka",
+      "siemens mleko nie leci",
+      "siemens mleko pluje"
+    ],
+    "possible_causes": [
+      "Zabrudzona dysza lub część układu mlecznego za przednim panelem",
+      "Problem z zaworem ceramicznym, jeśli występuje w danym modelu"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Siemens"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Dokładna lokalizacja dyszy zależy od modelu; bez instrukcji rozbierania pod napięciem."
+  },
+  {
+    "id": "melitta_milk_ceramic_valve",
+    "category": "milk_system",
+    "component": "ceramic_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "melitta nie spienia mleka",
+      "melitta mleko nie leci",
+      "melitta brak pianki"
+    ],
+    "possible_causes": [
+      "Problem z zaworem ceramicznym w modelach w niego wyposażonych",
+      "Zabrudzenie lub niedrożność układu mlecznego"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Melitta"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false
+  },
+  {
+    "id": "saeco_milk_solenoid",
+    "category": "milk_system",
+    "component": "solenoid_and_milk_path",
+    "scope": "brand_observation",
+    "symptoms": [
+      "Saeco nie spienia mleka",
+      "Saeco mleko nie leci",
+      "Saeco mleko pluje"
+    ],
+    "possible_causes": [
+      "Problem z elektrozaworem w konstrukcji, która go wykorzystuje",
+      "Niedrożność lub zabrudzenie elementów układu mlecznego"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Przyczyna zależy od modelu; nie zakładać obecności elektrozaworu w każdej konfiguracji."
+  },
+  {
+    "id": "philips_milk_solenoid",
+    "category": "milk_system",
+    "component": "solenoid_and_milk_path",
+    "scope": "brand_observation",
+    "symptoms": [
+      "Philips nie spienia mleka",
+      "Philips mleko nie leci",
+      "Philips mleko pluje"
+    ],
+    "possible_causes": [
+      "Problem z elektrozaworem w konstrukcji, która go wykorzystuje",
+      "Niedrożność lub zabrudzenie elementów układu mlecznego"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Philips"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Przyczyna zależy od modelu; nie zakładać obecności elektrozaworu w każdej konfiguracji."
+  },
+  {
+    "id": "delonghi_milk_solenoid",
+    "category": "milk_system",
+    "component": "solenoid_and_milk_path",
+    "scope": "brand_observation",
+    "symptoms": [
+      "DeLonghi nie spienia mleka",
+      "DeLonghi mleko nie leci",
+      "DeLonghi mleko pluje"
+    ],
+    "possible_causes": [
+      "Problem z elektrozaworem w konstrukcji, która go wykorzystuje",
+      "Niedrożność lub zabrudzenie elementów układu mlecznego"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "DeLonghi"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "observed",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Przyczyna zależy od modelu; nie zakładać obecności elektrozaworu w każdej konfiguracji."
+  },
+  {
+    "id": "krups_milk_air_channel_ntc",
+    "category": "milk_system",
+    "component": "milk_air_channel_or_temperature_sensor",
+    "scope": "brand_observation",
+    "symptoms": [
+      "krups nie spienia mleka",
+      "krups mleko pluje",
+      "krups nie pobiera mleka"
+    ],
+    "possible_causes": [
+      "Niedrożny wąski kanał doprowadzania powietrza lub przewód mleczny",
+      "Możliwa nieprawidłowa temperatura pary, w niektórych przypadkach związana z NTC"
+    ],
+    "diagnostic_questions": [
+      "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
+      "Czy przy spienianiu słychać parę lub nietypowe odgłosy?",
+      "Czy problem występuje także po czyszczeniu elementów dostępnych użytkownikowi?",
+      "Czy problem dotyczy wyłącznie piany, czy także temperatury pary?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [
+        "Krups"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Nie traktować NTC jako rozpoznanej usterki bez sprawdzenia objawów i dokumentacji modelu."
+  },
+  {
+    "id": "water_tank_connection_possible_leak",
+    "category": "water_leak",
+    "component": "water_tank_seal",
+    "scope": "generic_observation",
+    "symptoms": [
+      "wyciek pod zbiornikiem wody",
+      "woda spod zbiornika",
+      "wyciek po założeniu pojemnika wody"
+    ],
+    "possible_causes": [
+      "Nieprawidłowo osadzony zbiornik",
+      "Uszkodzone uszczelnienie złącza zbiornika"
+    ],
+    "diagnostic_questions": [
+      "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy występuje wyciek: podczas kawy, gorącej wody, mleka, płukania czy także w spoczynku?",
+      "Czy woda jest czysta, zabarwiona kawą czy zawiera fusy?",
+      "Czy wyciek występuje jeszcze przed uruchomieniem pompy?",
+      "W którym miejscu pojawia się woda: pod ekspresem, w tacce, w pojemniku na fusy czy przy dyszy?",
+      "Kiedy pojawia się woda: podczas parzenia, płukania, poboru gorącej wody, spieniania mleka czy również w spoczynku?",
+      "Czy ekspres prawidłowo podaje gorącą wodę?",
+      "Czy woda jest czysta czy zabarwiona kawą?"
+    ],
+    "safe_checks": [
+      "Zanotuj miejsce i moment pojawiania się problemu; nie otwieraj urządzenia pod napięciem ani gdy jest gorące lub pod ciśnieniem."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "evidence_status": "tentative",
+    "source": {
+      "type": "hypothesis",
+      "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
+    },
+    "verified": false,
+    "notes": "Proponowana dodatkowa hipoteza diagnostyczna do potwierdzenia na realnym przypadku.",
+    "liquid_destination": "water_tank_coupling"
+  },
+  {
+    "id": "tray_overflow_before_indicator",
+    "category": "water_leak",
+    "component": "drip_tray_or_drainage",
+    "scope": "generic_observation",
+    "symptoms": [
+      "woda przelewa się z tacki zanim jest komunikat",
+      "tacka ociekowa przepełnia się bez ostrzeżenia",
+      "tacka pełna zanim ekspres prosi o opróżnienie"
+    ],
+    "possible_causes": [
+      "Nietypowo duża ilość wody kierowana do tacki",
+      "Nieszczelność odprowadzająca dodatkową wodę do tacki",
+      "Nieprawidłowe osadzenie tacki lub problem ze wskaźnikiem, jeśli model go posiada",
+      "Odprowadzanie wody w ramach normalnych cykli, ale tacka opróżniana za rzadko"
+    ],
+    "diagnostic_questions": [
+      "Czy tacka przepełnia się przed komunikatem lub wskaźnikiem poziomu?",
+      "Czy problem pojawia się po płukaniu, kawie, mleku czy również bez używania urządzenia?",
+      "Czy gorąca woda działa prawidłowo?",
+      "Czy dany model posiada wskaźnik mechaniczny czy komunikat ekranowy?",
+      "Czy wyciek z tacki jest nowym objawem?"
+    ],
+    "safe_checks": [
+      "Bez demontażu pod napięciem ani przy gorących lub ciśnieniowych elementach; korzystaj z dokumentacji modelu i wykwalifikowanego serwisu."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowana obserwacja serwisowa użytkownika, 2026-11-21; bez potwierdzenia dla wskazanego modelu"
+    },
+    "verified": false,
+    "evidence_status": "observed",
+    "notes": "Nie każdy ekspres automatycznie wykrywa poziom wody w tacce. Sama obecność wody w tacce bywa normalna, ale przepełnienie przed spodziewanym sygnałem wymaga diagnostyki.",
+    "keywords": [
+      "przelana tacka",
+      "tacka wycieka",
+      "woda wylewa się z tacki"
+    ]
+  },
+  {
+    "id": "coffee_not_hot_general",
+    "category": "heating_temperature",
+    "component": "heating_system",
+    "scope": "generic_observation",
+    "symptoms": [
+      "kawa jest letnia",
+      "zbyt zimna kawa",
+      "kawa nie jest ciepła",
+      "gorąca woda nie jest gorąca"
+    ],
+    "possible_causes": [
+      "Nieprawidłowa praca grzałki lub termobloku",
+      "Zadziałanie zabezpieczenia termicznego / problem z termikiem",
+      "Nieprawidłowy pomiar temperatury przez NTC",
+      "Nieprawidłowe sterowanie elementem grzejnym",
+      "Ustawienia temperatury lub warunki przygotowania napoju, zależne od modelu"
+    ],
+    "diagnostic_questions": [
+      "Czy podawana gorąca woda ma prawidłową temperaturę?",
+      "Czy napój jest chłodny już na początku nalewania?",
+      "Czy pojawia się komunikat błędu albo problem z nagrzewaniem?",
+      "Czy ten sam problem dotyczy wszystkich rodzajów napojów?"
+    ],
+    "safe_checks": [
+      "Bez demontażu pod napięciem ani przy gorących lub ciśnieniowych elementach; korzystaj z dokumentacji modelu i wykwalifikowanego serwisu."
+    ],
+    "applicability": {
+      "brands": [],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowana obserwacja serwisowa użytkownika, 2026-11-21; bez potwierdzenia dla wskazanego modelu"
+    },
+    "verified": false,
+    "evidence_status": "observed",
+    "notes": "Nie diagnozować modułu ani NTC tylko na podstawie zimnej kawy; układy i kody zależą od modelu.",
+    "keywords": [
+      "zimna kawa",
+      "nie dogrzewa",
+      "letnia woda"
+    ]
+  },
+  {
+    "id": "delonghi_control_board_heating_observation",
+    "category": "heating_temperature",
+    "component": "control_board",
+    "scope": "brand_observation",
+    "symptoms": [
+      "delonghi nie podgrzewa kawy",
+      "delonghi kawa zimna",
+      "delonghi problem nagrzewania"
+    ],
+    "possible_causes": [
+      "W jednym zgłoszonym przypadku usterka elementu elektronicznego na module sterującym była powiązana z brakiem ogrzewania",
+      "Inne przyczyny, takie jak grzałka, NTC lub zabezpieczenie termiczne, nie zostały wykluczone"
+    ],
+    "diagnostic_questions": [
+      "Jaki jest dokładny model DeLonghi?",
+      "Czy gorąca woda i para działają prawidłowo?",
+      "Czy wyświetla się komunikat błędu?",
+      "Czy sprawdzono już możliwe przyczyny poza modułem sterowania?"
+    ],
+    "safe_checks": [
+      "Bez demontażu pod napięciem ani przy gorących lub ciśnieniowych elementach; korzystaj z dokumentacji modelu i wykwalifikowanego serwisu."
+    ],
+    "applicability": {
+      "brands": [
+        "DeLonghi"
+      ],
+      "models": [],
+      "series": []
+    },
+    "overrides": {},
+    "source": {
+      "type": "technician_observation",
+      "reference": "Zanonimizowana obserwacja serwisowa użytkownika, 2026-11-21; bez potwierdzenia dla wskazanego modelu"
+    },
+    "verified": false,
+    "evidence_status": "tentative",
+    "notes": "Pojedynczy przypadek opisany przez serwisanta; brak nazwy modelu i identyfikacji elementu modułu. Wymaga sprawdzenia; brak instrukcji prac lutowniczych lub pomiarów pod napięciem.",
+    "keywords": []
+  }
+]
