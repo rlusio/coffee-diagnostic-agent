@@ -8,13 +8,13 @@ class ExtendedKnowledgeBaseTests(unittest.TestCase):
         self.assertEqual(len(records), len({r['id'] for r in records}))
 
     def test_seria_granaroma_requires_model(self):
-        no_model = find_faults('wężyk przy elektrozaworach', brand='Saeco', top_k=50)
+        no_model = find_faults('wąż wypada obok przepływomierza', brand='Saeco', top_k=50)
         self.assertNotIn('saeco_granaroma_hose_solenoid_leak', [x['id'] for x in no_model])
-        with_model = find_faults('wężyk przy elektrozaworach', brand='Saeco', model='GranAroma', top_k=50)
-        self.assertIn('saeco_granaroma_hose_solenoid_leak', [x['id'] for x in with_model])
+        with_model = find_faults('wąż wypada obok przepływomierza', brand='Saeco', model='GranAroma', top_k=50)
+        self.assertEqual(with_model[0]['id'], 'saeco_granaroma_hose_solenoid_leak')
 
     def test_saeco_not_automatically_philips(self):
-        matches = find_faults('wężyk przy elektrozaworach', brand='Philips', model='GranAroma', top_k=50)
+        matches = find_faults('wąż wypada obok przepływomierza', brand='Philips', model='GranAroma', top_k=50)
         self.assertNotIn('saeco_granaroma_hose_solenoid_leak', [x['id'] for x in matches])
 
     def test_delonghi_alias(self):

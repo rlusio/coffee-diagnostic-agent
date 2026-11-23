@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import sqlite3
 from contextlib import contextmanager
@@ -15,6 +16,8 @@ from pathlib import Path
 from uuid import uuid4
 
 DEFAULT_DB = Path(__file__).resolve().parent.parent / "data" / "review_queue.sqlite3"
+if os.environ.get("REVIEW_DB_PATH"):
+    DEFAULT_DB = Path(os.environ["REVIEW_DB_PATH"])
 STATUSES = ("pending", "in_review", "needs_info", "approved_for_kb", "closed")
 NOTIFY_ON = {"needs_info", "approved_for_kb", "closed"}
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")

@@ -1,0 +1,10 @@
+**
+!requirements.txt
+!app.py
+!admin.py
+!demo_chat.py
+!src/
+!src/*.py
+!data/
+!data/faults.json
+!data/machines.json

@@ -1,5 +1,6 @@
 """Local command-line demonstration: fault retrieval + explicit user review submissions."""
-from src.agent import build_agent
+from src.agent import build_agent, format_observations
+from uuid import uuid4
 from src.review_store import get_public_status, log_search, submit_case
 
 
@@ -11,6 +12,8 @@ def offer_submission(brand: str, model: str, symptoms: str) -> None:
     choice = input("Zgłosić ten przypadek do późniejszej weryfikacji? [t/N]: ")
     if not yes(choice):
         return
+    if len(symptoms) > 1200:
+        symptoms = input("Opis rozmowy przekracza limit zgłoszenia. Podsumuj objawy (do 1200 znaków): ").strip()
     if not brand or not model:
         print("Dla nowego zgłoszenia potrzebna jest marka i model/seria.")
         brand = brand or input("Marka: ").strip()
@@ -37,6 +40,36 @@ def offer_submission(brand: str, model: str, symptoms: str) -> None:
         print(f"Nie zapisano zgłoszenia: {exc}")
 
 
+def run_case(agent, description, brand, model):
+    config = {"configurable": {"thread_id": str(uuid4())}}
+    turn = {"message": description, "brand": brand, "model": model}
+
+    while True:
+        state = agent.invoke(turn, config=config)
+        print("\nAgent:", state["answer"])
+        if not state.get("pending_question"):
+            break
+        message = input("Ty (Enter kończy ten przypadek): ").strip()
+        if not message:
+            break
+        turn = {"message": message}
+
+    brand = state.get("brand", "")
+    model = state.get("model", "")
+    observations = format_observations(state)
+    print("\nPodsumowanie przypadku")
+    print("Zgłoszony objaw:", description)
+    if brand or model:
+        print("Ekspres:", brand, model)
+    for observation in observations:
+        print(observation)
+    log_search(found_count=len(state.get("candidates", [])), brand=brand, model=model)
+    summary_lines = [state["description"]]
+    summary_lines.extend(observations)
+    symptoms = "\n".join(summary_lines)
+    offer_submission(brand, model, symptoms)
+
+
 def main():
     agent = build_agent()
     print("Coffee Diagnostic Agent — lokalna demonstracja, nie zastępuje dokumentacji producenta")
@@ -55,10 +88,7 @@ def main():
             continue
         brand = input("Marka (opcjonalnie): ").strip()
         model = input("Model lub seria (opcjonalnie): ").strip()
-        result = agent.invoke({"description": description, "brand": brand, "model": model})
-        log_search(found_count=len(result.get('candidates', [])), brand=brand, model=model)
-        print("\n" + result["answer"] + "\n")
-        offer_submission(brand, model, description)
+        run_case(agent, description, brand, model)
 
 
 if __name__ == "__main__":

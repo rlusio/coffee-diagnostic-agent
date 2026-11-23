@@ -20,6 +20,20 @@ def normalize_identifier(value: str) -> str:
     return re.sub(r'[^a-z0-9]', '', normalize(value))
 
 
+def split_catalog_device(brand: str, model: str) -> tuple[str, str]:
+    """Recognize a complete catalog name entered in the brand field."""
+    if model or not brand.strip():
+        return brand, model
+    with DATA_PATH.with_name("machines.json").open(encoding="utf-8") as stream:
+        machines = json.load(stream)
+    entered = normalize_identifier(brand)
+    for machine in machines:
+        for name in (machine.get("model"), machine.get("series")):
+            if name and entered == normalize_identifier(machine["brand"] + name):
+                return machine["brand"], name
+    return brand, model
+
+
 def tokenize(text: str) -> set[str]:
     return {word for word in re.findall(r'[a-z0-9]+', normalize(text))
             if len(word) > 2 and word not in STOPWORDS}
@@ -68,6 +82,9 @@ def find_faults(description: str, brand: str = '', model: str = '', top_k: int =
     results = []
     for record in faults:
         if not _is_applicable(record, brand, model):
+            continue
+        required_words = record.get("required_symptom_words", [])
+        if required_words and query.isdisjoint(tokenize(" ".join(required_words))):
             continue
         phrases = record.get('symptoms', []) + record.get('keywords', [])
         overlap = max((len(query & tokenize(phrase)) for phrase in phrases), default=0)

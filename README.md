@@ -1,71 +1,104 @@
-# Coffee Machine Diagnostic Agent — MVP v3
+# Coffee Machine Diagnostic Agent
 
-Edukacyjny prototyp agenta wspierającego diagnostykę ekspresów automatycznych. Łączy uporządkowane dane o objawach i modelach z prostym grafem LangGraph. **Nie jest to zweryfikowany system diagnozujący awarie.** Na tym etapie bez LLM i bez Streamlit; to świadomie rozdzielony fundament pod późniejszą integrację Ollamy.
+Polskojęzyczny asystent do wstępnej diagnostyki automatycznych ekspresów do kawy. Działa lokalnie w terminalu. Użytkownik opisuje objaw własnymi słowami, a agent dobiera pytania, zapamiętuje odpowiedzi i podpowiada, co można bezpiecznie sprawdzić. Rozmową steruje **LangGraph**, a lokalny model **Bielik 4.5B Instruct** działa przez **Ollamę**.
 
-## Co zawiera v3?
+Projekt łączy moje doświadczenie w serwisowaniu ekspresów z zainteresowaniem programowaniem i modelami językowymi. Rozwijam go na podstawie sytuacji, które znam z pracy. Na przykład przy zgłoszeniu „woda pod ekspresem” ważne jest dla mnie rozróżnienie, gdzie użytkownik widzi wodę i co pozwoliłoby ustalić źródło wycieku.
 
-- `data/faults.json`: **35 rekordów**. Usterki układu wodnego, wycieki, objawy mleka, brak zasilania i grzania, a także szczególne obserwacje serwisowe. Dodatkowe pytania o wyciek, gorącą wodę i przepełnienie tacki oraz odnotowany pojedynczy przypadek naprawy modułu De'Longhi (nie jest to diagnoza ogólna).
-- `data/machines.json`: **23 wpisy** z modelami i seriami. Wpis w katalogu **nie oznacza**, że wewnętrzna konstrukcja i wszystkie usterki zostały potwierdzone. Informacje o istnieniu serii i zgodności z konkretnymi usterkami są rozdzielone.
-- `src/knowledge_base.py`: wyszukiwanie kandydatów na podstawie symptomów z filtrem marki i serii; proste tokeny, a nie semantyczne ML.
-- `src/agent.py`: prosty graf LangGraph (`retrieve` → `clarify` lub `answer`).
-- `src/review_store.py`: SQLite — **oddzielna kolejka zgłoszeń do ręcznej weryfikacji**, zdarzenia, statusy i szkice e-maili w outboxie.
-- `admin.py`: **tylko lokalny CLI administratora**, do przeglądania zgłoszeń, zmiany statusu i przeglądania logów.
-- `app.py`: lokalna konsola wyszukiwania i możliwość **dobrowolnego** zgłoszenia nowego przypadku; pole `status` umożliwia sprawdzenie stanu sprawy po numerze.
+**Etap projektu — lokalne MVP przed testami zewnętrznymi.** Na przypadkach serwisowych dopracowuję opisy objawów, dopasowanie do marek i serii oraz kolejność pytań. Wagi Bielika pozostają takie jak w opublikowanym modelu. Rekordy obejmują obserwacje serwisowe i przykłady ilustracyjne. Sugerowane przyczyny wymagają potwierdzenia.
 
-## Instalacja (Windows CMD, Python 3.13)
+## Przykładowa rozmowa — wyciek w Saeco GranAroma
 
-W nowym katalogu, z aktywnym środowiskiem `.venv`:
+Fragment rozmowy z lokalnego demo. Użytkownik wpisał `saeco granaroma` w polu marki i pozostawił pole modelu puste.
 
-```cmd
+> **Użytkownik:** Woda się leje z ekspresu.
+>
+> **Agent:** Gdzie pojawia się woda?
+>
+> **Użytkownik:** Woda z tyłu ekspresu.
+>
+> **Agent:** Woda pojawia się z tyłu ekspresu. Kiedy występuje problem?
+>
+> **Użytkownik:** W trakcie płukania od razu.
+>
+> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Czy przy pobieraniu gorącej wody też widzisz wyciek z tyłu ekspresu?
+>
+> **Użytkownik:** Tak.
+>
+> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Czy cieknie już w trakcie nalewania gorącej wody, czy dopiero na końcu, gdy strumień ustaje?
+>
+> **Użytkownik:** Dopiero na końcu.
+>
+> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Przy gorącej wodzie wyciek widać dopiero po odcięciu strumienia. Trop z przypadku serwisowego tej serii: Przewód zrzutowy zespołu elektrozaworów mógł wypiąć się z małego elementu obok przepływomierza. Wtedy woda przeznaczona do tacki spływa do wnętrza i może wypłynąć z tyłu ekspresu. Po jednej czarnej kawie wyciek może być niewielki, a po kawie mlecznej z płukaniem od razu może być widać więcej wody. Żeby potwierdzić źródło w tym egzemplarzu, serwis musi ustalić, z którego połączenia wypływa woda.
+
+W tym przykładzie użytkownik zaobserwował wyciek podczas dwóch czynności. W bazie dla tej serii opisano m.in. przypadek wypięcia węża z elementu obok przepływomierza. Żeby powiązać tę konkretną przyczynę ze zgłoszeniem, potrzebna jest dodatkowa obserwacja wskazująca na to połączenie.
+
+## Jak powstaje odpowiedź
+
+1. **Stan rozmowy.** Graf zapisuje rozpoznane fakty, m.in. miejsce pojawienia się wody, moment usterki i dźwięk młynka. Pamięć jednego przypadku działa w obrębie uruchomionego programu.
+2. **Wyszukiwanie w JSON.** Agent porównuje słowa z opisu z objawami i frazami w bazie oraz uwzględnia ograniczenia marki, modelu i serii. Wynik dopasowania opisuje podobieństwo tekstu. Na jego podstawie nie da się wyliczyć prawdopodobieństwa awarii.
+3. **Wybór kolejnego kroku.** Przy słabym dopasowaniu graf prosi o szczegóły. Kiedy potrzebny jest wybór rekordu i tylko jeden spełnia próg, graf korzysta z niego bezpośrednio. Przy kilku kandydatach przekazuje ich opisy Bielikowi, który może wskazać rekord lub zrezygnować z wyboru.
+4. **Hipoteza i sprawdzenie.** Program pobiera możliwe przyczyny i zalecane czynności z wybranego rekordu. Pilnuje, o co jeszcze warto zapytać i które porady użytkownik już otrzymał.
+
+## Uruchomienie przez Docker Compose
+
+Uruchom Docker Desktop w trybie kontenerów Linux. W katalogu projektu przygotuj obraz aplikacji i pobierz Bielika do magazynu Ollamy w kontenerze (około 5,1 GB):
+
+```powershell
+docker compose build app
+docker compose up -d --wait ollama
+docker compose exec ollama ollama pull SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0
+```
+
+Rozpocznij rozmowę w terminalu:
+
+```powershell
+docker compose run --rm app
+```
+
+Przy kolejnym uruchomieniu wystarczy ostatnie polecenie. Model działa na CPU. Wolumen `models` przechowuje pobranego Bielika, a `submissions` przechowuje lokalną bazę zgłoszeń. Polecenie `docker compose down` zatrzymuje zestaw i zachowuje oba wolumeny. Opcja `-v` usuwa ich zawartość. Zgłoszenia zapisane w wersji dockerowej można wyświetlić poleceniem `docker compose run --rm app python admin.py list`.
+
+## Uruchomienie na Windows bez Dockera
+
+Potrzebujesz Pythona 3.13, PowerShella i zainstalowanej Ollamy. W katalogu projektu wykonaj:
+
+```powershell
 py -3.13 -m venv .venv
-.venv\Scripts\activate.bat
+.\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v
+ollama pull SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0
 python app.py
 ```
 
-Uwaga: jeśli masz już `.venv`, nie musisz tworzyć go ponownie. Nie nadpisuj własnych zmian bez kopii zapasowej.
+Ollama powinna działać podczas rozmów wymagających wyboru przez model. Aby zobaczyć ranking rekordów i zapamiętane obserwacje po każdej odpowiedzi, uruchom `python demo_chat.py`.
 
-## Jak działa weryfikacja?
+## Zgłoszenia i prywatność
 
-1. Użytkownik sam potwierdza, że chce **przesłać przypadek**. Zwykłe pytania diagnostyczne nie trafiają automatycznie do kolejki.
-2. Zgłoszenie zapisuje się **lokalnie** w `data/review_queue.sqlite3` ze statusem `pending` (oczekuje).
-3. Administrator przegląda i ustawia status: `in_review`, `needs_info`, `approved_for_kb` albo `closed`. `closed` może oznaczać m.in. duplikat, spam lub brak możliwości potwierdzenia; nie oznacza, że każde nowe zgłoszenie odrzucamy.
-4. `approved_for_kb` **nie dopisuje automatycznie żadnej usterki do `faults.json`**. Zmiana bazy wiedzy wymaga ręcznego sprawdzenia i aktualizacji repozytorium.
-5. Jeśli użytkownik dobrowolnie poda adres e-mail i zgodę, zmiana statusu na `needs_info`, `approved_for_kb` lub `closed` przygotuje szkic wiadomości w tabeli `outbox`. **NIC NIE JEST JESZCZE WYSYŁANE.** Podłączenie dostawcy e-maili (SMTP/API) i systemu ochrony przed spamem to osobny, przyszły etap.
+Po zakończeniu rozmowy można dobrowolnie zapisać przypadek do ręcznej weryfikacji. Aplikacja zwraca numer zgłoszenia. W tej samej instalacji wpisz `status` przy pytaniu `Objawy:`, a następnie podaj numer. Lokalna baza SQLite przechowuje zgłoszenia oddzielnie od bazy wiedzy JSON. Podanie e-maila jest opcjonalne i wymaga zgody na zapis; wysyłka wiadomości jest obecnie nieaktywna.
 
-### Panel administratora — na razie CLI
-
-```cmd
-python admin.py list
+```powershell
 python admin.py list --status pending
-python admin.py show NUMER_ZGLOSZENIA
-python admin.py review NUMER_ZGLOSZENIA needs_info --note "Podaj dokładny model"
-python admin.py review NUMER_ZGLOSZENIA approved_for_kb --note "Potwierdzono po weryfikacji"
-python admin.py outbox
-python admin.py logs
 ```
 
-Nie publikuj CLI `admin.py` jako dostępnego publicznie endpointu ani bez uwierzytelniania. To lokalny prototyp; prawdziwy panel administracyjny wymaga autoryzacji.
+## Kod i testy
 
-## Jakie logi zapisujemy?
+- [src/agent.py](src/agent.py) — stan rozmowy, graf LangGraph i integracja z Bielikiem.
+- [src/knowledge_base.py](src/knowledge_base.py) — wyszukiwanie usterek w [bazie przypadków](data/faults.json). [Katalog urządzeń](data/machines.json) zawiera informacje o markach i modelach.
+- [src/review_store.py](src/review_store.py) — zapis zgłoszeń, statusów i zdarzeń w SQLite.
+- [tests/](tests/) — testy wyszukiwania, rozmów wieloturowych, CLI i obsługi zgłoszeń. Można je uruchomić bez aktywnej Ollamy.
 
-- `search` — liczba znalezionych kandydatów i informacja, czy marka/model były podane, **bez surowego tekstu zgłoszenia**.
-- `case_submitted` i `duplicate_submission` — informacje o dobrowolnym zgłoszeniu/duplikacie.
-- `status_updated` — historia decyzji administratora.
-- `email_queued_not_sent` — utworzony szkic powiadomienia, **nie wysłana wiadomość**.
+```powershell
+python -m unittest discover -s tests -v
+```
 
-Zgłoszone przez użytkownika objawy, marka, model, ewentualny adres e-mail i notatki trafiają do prywatnej bazy SQLite; plik wyklucza `.gitignore`. **Nie publikuj go na GitHubie.** Do publicznego wdrożenia trzeba dodać politykę prywatności, retencję/usuwanie danych, kontrolę dostępu, ograniczenia zgłoszeń, ochronę przed botami, obsługę zgód oraz bezpieczny serwis e-mail.
+## Dalsze prace
 
-## Wiarygodność i bezpieczeństwo
+Przed testami z użytkownikami chcę sprawdzić trafność pytań i hipotez na kolejnych przypadkach, także na opisach sformułowanych inaczej niż w bazie. Do rozpatrzenia później pozostają interfejs graficzny, wyszukiwanie semantyczne i opcjonalne powiadomienia.
 
-- `evidence_status: observed` — relacja technika, a nie automatycznie potwierdzony fakt dla każdego modelu.
-- `evidence_status: tentative` — hipoteza wymagająca sprawdzenia.
-- `verified: false` — brak niezależnej weryfikacji w instrukcji dla wskazanego modelu.
-- Puste `applicability.models` oznacza brak potwierdzonej listy modeli, nie zgodność uniwersalną.
-- Nie instruować nieprzeszkolonych użytkowników do pracy pod napięciem, na gorących elementach lub przy układach ciśnieniowych. Nie zalecać automatycznie nieautoryzowanych przeróbek ani lutowania modułu.
-- Nie kopiować danych klientów, materiałów poufnych pracodawcy ani danych identyfikujących klienta do zgłoszeń.
+| Objaw do zbadania | Hipoteza do sprawdzenia |
+|---|---|
+| Błąd napełniania. Istotne są dokładny komunikat i model ekspresu. | Zabrudzony lub uszkodzony przepływomierz. |
+| Kawa kapie, płynie nierówno lub tylko z jednego z dwóch otworów. | Zabrudzona wylewka kawy. |
+| Podczas parzenia kawa nie wypływa albo leci wyłącznie kroplami. | Zatkane sito zaparzacza. W praktyce serwisowej obserwowałem przy zatkanym sicie również silne kropelkowanie. |
+| W ekspresie z kapucynatorem mleko płynie niestabilnie lub tylko z jednego z kilku otworów. | Zabrudzony kapucynator w modelach wyposażonych w taki układ. |
 
-## Następny etap
-
-Dopracować dopasowywanie objawów i logikę pytań, a następnie podłączyć Ollamę do ekstrakcji z tekstu i LangGraph do rozmów wieloetapowych. Powiadomienia e-mail to rozszerzenie — nie wymóg do nauki Agentic AI w MVP.
+Przy opisie „leci z jednej dziurki” pierwsze pytanie powinno ustalić, czy chodzi o kawę, czy o mleko.

@@ -3,6 +3,16 @@ from src.knowledge_base import find_faults, load_faults, tokenize
 
 
 class KnowledgeBaseTests(unittest.TestCase):
+    def test_frequent_tray_emptying(self):
+        results = find_faults("Po dwóch kawach muszę opróżniać tackę")
+        self.assertTrue(results)
+        self.assertEqual(results[0]["id"], "leak_tray_generic")
+
+    def test_tray_overflow_before_warning(self):
+        results = find_faults("Tacka przelewa się przed komunikatem")
+        self.assertTrue(results)
+        self.assertEqual(results[0]["id"], "tray_overflow_before_indicator")
+
     def test_json_is_valid(self):
         self.assertGreater(len(load_faults()), 0)
 

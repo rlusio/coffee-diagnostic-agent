@@ -76,6 +76,7 @@
     "symptoms": [
       "nie mieli kawy",
       "młynek nie mieli",
+      "młynka nie słychać",
       "brak mielenia"
     ],
     "possible_causes": [
@@ -109,6 +110,9 @@
     "scope": "generic_observation",
     "symptoms": [
       "wyciek wody pod ekspresem",
+      "woda się leje z ekspresu",
+      "cieknie ekspres",
+      "ekspres przecieka",
       "kałuża pod urządzeniem",
       "woda wypływa z obudowy"
     ],
@@ -152,6 +156,7 @@
     "symptoms": [
       "woda w tacce ociekowej",
       "tacka szybko się napełnia",
+      "trzeba często opróżniać tackę",
       "dużo wody w tacce",
       "przelewa się tacka ociekowa",
       "tacka pełna przed komunikatem o opróżnieniu"
@@ -537,12 +542,12 @@
     "component": "solenoid_hose_connector",
     "scope": "brand_observation",
     "symptoms": [
-      "wyciek z wężyka przy elektrozaworach",
-      "wąż wypada przy elektrozaworach",
+      "wyciek z wężyka obok przepływomierza",
+      "wąż wypada obok przepływomierza",
       "woda koło przepływomierza"
     ],
     "possible_causes": [
-      "Poluzowane połączenie przewodu z elementem układu zaworowego"
+      "Przewód zrzutowy zespołu elektrozaworów mógł wypiąć się z małego elementu obok przepływomierza. Wtedy woda przeznaczona do tacki spływa do wnętrza i może wypłynąć z tyłu ekspresu. Po jednej czarnej kawie wyciek może być niewielki, a po kawie mlecznej z płukaniem od razu może być widać więcej wody"
     ],
     "diagnostic_questions": [
       "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
@@ -572,10 +577,11 @@
       "reference": "Zanonimizowane obserwacje serwisowe użytkownika, 2026-11-21 (niezweryfikowane dokumentacją producenta)"
     },
     "verified": false,
-    "notes": "Obserwacja serwisowa. Nie traktować założenia opaski zaciskowej jako ogólnej zalecanej naprawy; rozwiązanie zależy od projektu połączenia i dokumentacji producenta.",
-    "liquid_destination": "inside_near_valve_assembly",
+    "notes": "Według obserwacji serwisowej zrzut do tacki występuje przede wszystkim po spienianiu mleka, przy czyszczeniu układu mlecznego, podczas płukania przy włączaniu i wyłączaniu oraz na końcu parzenia. Przy gorącej wodzie zrzut jest spodziewany po odcięciu strumienia. Przepływ przez odpływ już podczas nalewania może wskazywać na niedomykanie zaworu, np. przez kamień. Punkt przyłączenia leży obok przepływomierza; nazwa elementu pozostaje nieustalona.",
+    "liquid_destination": "inside_near_flow_meter",
     "keywords": [
       "wąż elektrozawor przepływomierz",
+      "wąż od elektrozaworów do elementu obok przepływki",
       "poluzowany wężyk"
     ]
   },
@@ -669,6 +675,7 @@
   },
   {
     "id": "saeco_granaroma_hot_water_drain_leak",
+    "required_symptom_words": ["tacka", "tacce", "tacki", "tackę", "tacy", "zawór", "zaworu", "zaworze", "złączka", "złączki", "złączce"],
     "category": "water_leak",
     "component": "hot_water_valve_or_fitting",
     "scope": "brand_observation",
@@ -1317,6 +1324,7 @@
     "scope": "generic_observation",
     "symptoms": [
       "woda przelewa się z tacki zanim jest komunikat",
+      "tacka przelewa się przed komunikatem o opróżnieniu",
       "tacka ociekowa przepełnia się bez ostrzeżenia",
       "tacka pełna zanim ekspres prosi o opróżnienie"
     ],
