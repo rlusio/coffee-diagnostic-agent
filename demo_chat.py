@@ -141,9 +141,14 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--obserwacje", action="store_true", help="pokaż interpretację opisu wycieku przez Bielika")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--obserwacje", action="store_true", help="pokaż interpretację opisu wycieku przez Bielika")
+    modes.add_argument("--granaroma", action="store_true", help="wyciek w GranAromie: Bielik odczytuje fakty, graf wybiera pytania")
     args = parser.parse_args()
     if args.obserwacje:
         run_observation_demo()
+    elif args.granaroma:
+        from src.granaroma_demo import run_interview
+        run_interview()
     else:
         main()

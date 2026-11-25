@@ -57,7 +57,8 @@ TIMINGS = {
     "podczas czyszczenia układu mlecznego": r"(?:podczas |przy |w trakcie )(?:automatycznego )?czyszczeni\w* ukladu mlecznego",
     "po odcięciu strumienia gorącej wody": r"(?:po|przy) odcieci\w* (?:strumienia )?goracej wody|na (?:koniec|koncu) nalewania goracej wody",
     "w trakcie nalewania gorącej wody": r"(?:podczas |przy |w trakcie )nalewania goracej wody",
-    "podczas parzenia": r"(?:podczas |przy |w trakcie )(?:parzeni\w*|kaw\w*|robieni\w* kaw\w*)",
+    "przy kawie": r"\bprzy kawie\b",
+    "podczas parzenia": r"(?:podczas |przy |w trakcie )(?:parzeni\w*|robieni\w* kaw\w*)|(?:podczas |w trakcie )kaw\w*|kawa leci do filizanki",
     "podczas płukania": r"(?:podczas |przy |w trakcie )plukani\w*",
     "podczas spieniania mleka": r"(?:podczas |przy |w trakcie )spieniani\w*(?: mleka)?",
     "podczas poboru gorącej wody": r"(?:podczas |przy |w trakcie )(?:poboru |pobierania )?goracej wody",
@@ -66,6 +67,7 @@ TIMINGS = {
 QUESTIONS = {
     "leak_location": "Gdzie pojawia się woda?",
     "fault_timing": "Kiedy występuje problem?",
+    "coffee_leak_phase": "Czy woda pojawia się już wtedy, gdy kawa leci do filiżanki, czy dopiero gdy ekspres kończy parzenie?",
     "hot_water_flow": "Czy gorąca woda leci prawidłowo?",
     "rear_leak_during_hot_water": "Czy przy pobieraniu gorącej wody też widzisz wyciek z tyłu ekspresu?",
     "hot_water_leak_phase": "Czy cieknie już w trakcie nalewania gorącej wody, czy dopiero na końcu, gdy strumień ustaje?",
@@ -208,6 +210,15 @@ def update_facts(state: DiagnosticState) -> dict:
                     values.append("podczas poboru gorącej wody")
             updates[field] = ", ".join(values)
 
+    if pending == "coffee_leak_phase":
+        if message in ("dopiero jak skonczy robic kawe", "dopiero po", "po zakonczeniu", "na koncu"):
+            updates["fault_timing"] = "po zakończeniu parzenia"
+        elif message in ("w trakcie", "jak leci kawa", "podczas nalewania"):
+            updates["fault_timing"] = "podczas parzenia"
+        coffee_phase = updates.get("fault_timing")
+        if coffee_phase in ("podczas parzenia", "po zakończeniu parzenia"):
+            updates["fault_timing"] = state["fault_timing"].replace("przy kawie", coffee_phase)
+
     flow = re.search(r"\bgoraca woda (nie dziala|nie leci|nie plynie|leci slabo|dziala|leci prawidlowo|plynie normalnie)\b", message)
     if flow:
         flow_description = flow.group(1)
@@ -283,6 +294,8 @@ def decide(state: DiagnosticState) -> str:
         brand = normalize_identifier(state.get("brand", ""))
         model = normalize_identifier(state.get("model", ""))
         if brand == "saeco" and model == "granaroma":
+            if state.get("pending_question") in ("coffee_leak_phase", "rear_leak_during_hot_water", "hot_water_leak_phase"):
+                return "granaroma_rear_leak"
             if not candidates or candidates[0]["score"] < MIN_ANSWER_SCORE:
                 return "granaroma_rear_leak"
             if candidates[0]["id"] in ("leak_external_generic", "saeco_granaroma_hose_solenoid_leak"):
@@ -520,9 +533,15 @@ def granaroma_rear_leak_reply(state: DiagnosticState) -> dict:
     if phase or "podczas poboru gorącej wody" in timing:
         observed = True
     summary = f"Wodę widać z tyłu ekspresu {timing}."
-    if observed is True and not phase:
+    answers = state.get("question_answers", {})
+    pending_needed = observed is None or (observed and not phase)
+    precise_coffee_timing = "podczas parzenia" in timing or "po zakończeniu parzenia" in timing
+    if "przy kawie" in timing and not precise_coffee_timing and "coffee_leak_phase" not in answers:
+        topic = "coffee_leak_phase"
+        pending_needed = True
+    elif observed is True and not phase:
         topic = "hot_water_leak_phase"
-    if (observed is None or (observed and not phase)) and topic not in state.get("question_answers", {}):
+    if pending_needed and topic not in answers:
         asked = state.get("asked_questions", []).copy()
         if topic not in asked:
             asked.append(topic)

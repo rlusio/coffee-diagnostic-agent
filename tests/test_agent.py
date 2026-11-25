@@ -8,6 +8,26 @@ from src.agent import build_agent, finish_reply, update_facts
 class TestAgentRouting(unittest.TestCase):
 
     @patch("src.agent.llm")
+    def test_granaroma_asks_what_at_coffee_time_means(self, llm):
+        agent = build_agent()
+        for reply, timing in (("dopiero jak skończy robić kawę", "po zakończeniu parzenia"),
+                              ("już kiedy kawa leci do filiżanki", "podczas parzenia"),
+                              ("nie wiem", "przy kawie")):
+            with self.subTest(reply=reply):
+                config = {"configurable": {"thread_id": reply}}
+                agent.invoke({"brand": "saeco", "model": "granaroma", "message": "ekspres cieknie"}, config)
+                agent.invoke({"message": "z tylu"}, config)
+                state = agent.invoke({"message": "przy kawie"}, config)
+                self.assertEqual(state["fault_timing"], "przy kawie")
+                self.assertEqual(state["pending_question"], "coffee_leak_phase")
+                state = agent.invoke({"message": reply}, config)
+                self.assertEqual(state["fault_timing"], timing)
+                self.assertEqual(state["pending_question"], "rear_leak_during_hot_water")
+                state = agent.invoke({"message": "nie"}, config)
+                self.assertEqual("obok przepływomierza" in state["answer"], timing == "po zakończeniu parzenia")
+        llm.invoke.assert_not_called()
+
+    @patch("src.agent.llm")
     def test_short_leak_report_uses_model_location_and_timing(self, llm):
         agent = build_agent()
         config = {"configurable": {"thread_id": "short-leak"}}
