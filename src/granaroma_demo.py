@@ -13,12 +13,12 @@ from src.knowledge_base import load_faults, normalize
 
 
 class Interview(DiagnosticState, total=False):
+    tank_side: str
     noticed_at: str
     onset_clarified: bool
     previous_reply: str
     breaker_tripped: str
-    tray_cleaned: str
-    brew_area_cleaned: str
+    makes_coffee: str
     tray_excess: str
 
 
@@ -28,14 +28,13 @@ AFTER_COFFEE_CHOICES = {
     "pierwsze krople": "tuż po parzeniu",
     "kałuża już tam była": "użytkownik nie widział początku lub nie pamięta",
 }
-CLEANING = ["ponad miesiąc temu", "w ostatnim miesiącu", UNKNOWN]
 FIELDS = {
-    "leak_location": ["z tyłu ekspresu", "z boku", "z boku bliżej tyłu", "z boku bliżej przodu",
-                      "pod tacką", "w tacce", "przy zbiorniku na wodę", "inne miejsce", UNKNOWN],
-    "tray_cleaned": CLEANING,
-    "brew_area_cleaned": CLEANING,
+    "tank_side": ["od strony zbiornika", "po przeciwnej stronie", UNKNOWN],
+    "leak_location": ["z tyłu ekspresu", "z boku",
+                      "pod tacką", "w tacce", "przy tacce", "przy zbiorniku na wodę", "inne miejsce", UNKNOWN],
+    "makes_coffee": ["tak", "nie", UNKNOWN],
     "tray_excess": ["tak", "nie", UNKNOWN],
-    "breaker_tripped": ["tak", "nie"],
+    "breaker_tripped": ["tak", "nie", UNKNOWN],
     "noticed_at": ["po kawie", "przy innej czynności", UNKNOWN],
     "fault_timing": ["podczas parzenia", "pod koniec parzenia", "tuż po parzeniu", "podczas płukania",
                      "inny moment", "użytkownik nie widział początku lub nie pamięta", UNKNOWN],
@@ -44,30 +43,30 @@ QUESTIONS = {
     "leak_location": "Gdzie zauważyłeś wodę?",
     "fault_timing": "Czy widziałeś, kiedy woda zaczęła wypływać? Jeśli zastałeś już kałużę, wystarczy „nie wiem”.",
 }
-LABELS = {"leak_location": "Miejsce", "noticed_at": "Zauważenie wody", "fault_timing": "Początek wycieku",
+LABELS = {"leak_location": "Miejsce", "tank_side": "Strona względem zbiornika", "noticed_at": "Zauważenie wody", "fault_timing": "Początek wycieku",
           "breaker_tripped": "Zadziałało zabezpieczenie elektryczne",
-          "tray_cleaned": "Ręczne mycie tacki", "brew_area_cleaned": "Mycie zaparzacza i jego komory",
+          "makes_coffee": "Ekspres robi kawę",
           "tray_excess": "Nadmierna ilość wody w tacce"}
 
 
 def supported_location(proposed, message, state):
     text = normalize(message)
+    if state.get("pending_question") == "tray_position":
+        if proposed in ("pod tacką", "w tacce", UNKNOWN):
+            return proposed
+    if re.search(r"\bprzy tacce\b", text) and not re.search(r"\b(nie|pod|w tacce|do tacki)\b", text):
+        return "przy tacce"
     if proposed == "przy zbiorniku na wodę" and re.search(r"zbiornik|pojemnik", text):
         return proposed
-    if proposed in ("pod tacką", "w tacce") and re.search(r"tac[cky]", text):
+    if proposed in ("pod tacką", "w tacce", "przy tacce") and re.search(r"tac[cky]", text):
         return proposed
-    if proposed in ("pod tacką", "w tacce", "przy zbiorniku na wodę"):
+    if proposed in ("pod tacką", "w tacce", "przy tacce", "przy zbiorniku na wodę"):
         return "bez zmiany"
     side = re.search(r"\b(bok\w*|bocz\w*)", text)
     rear = re.search(r"\b(tyl|tylu|tylem|tyln\w*)\b|\bza (ekspresem|urzadzeniem)", text)
-    front = re.search(r"\bprz[oó]d\w*|\bprzedni\w*|\bprzodu", text)
-    if state.get("pending_question") == "side_position" and state.get("leak_location") == "z boku":
+    if state.get("pending_question") == "tank_side" and state.get("leak_location") == "z boku":
         side = True
     if side:
-        if rear and not front:
-            return "z boku bliżej tyłu"
-        if front and not rear:
-            return "z boku bliżej przodu"
         return "z boku"
     if proposed.startswith("z boku") or (proposed == "z tyłu ekspresu" and not rear):
         return "bez zmiany"
@@ -76,6 +75,24 @@ def supported_location(proposed, message, state):
 
 def extract_facts(state):
     message = state["message"]
+    pending = state.get("pending_question")
+    if pending in ("breaker_tripped", "makes_coffee", "tray_excess"):
+        selected = normalize(message).strip(" .!?")
+        if selected in ("tak", "nie", "nie wiem"):
+            value = UNKNOWN if selected == "nie wiem" else selected
+            return {pending: value, "previous_reply": message}
+    if state.get("pending_question") == "tank_side":
+        choices = {"od strony zbiornika": "od strony zbiornika", "od zbiornika": "od strony zbiornika",
+                   "po przeciwnej stronie": "po przeciwnej stronie", "z drugiej": "po przeciwnej stronie",
+                   "nie wiem": UNKNOWN}
+        selected = normalize(message).strip(" .!?")
+        if selected in choices:
+            return {"tank_side": choices[selected], "previous_reply": message}
+    if state.get("pending_question") == "tray_position":
+        choices = {"pod spodem": "pod tacką", "pod tacka": "pod tacką", "w srodku": "w tacce", "w tacce": "w tacce"}
+        selected = normalize(message).strip(" .!?")
+        if selected in choices:
+            return {"leak_location": choices[selected], "previous_reply": message}
     if state.get("answer") == AFTER_COFFEE_QUESTION:
         selected = message.strip().lower().strip(".!?")
         if selected in AFTER_COFFEE_CHOICES:
@@ -93,10 +110,13 @@ def extract_facts(state):
         "fault_timing = kiedy użytkownik widział POCZĄTEK wypływania. "
         "Kałuża po kawie bez podania miejsca: leak_location bez zmiany. Rozróżnij bok bliżej tyłu "
         "od samego tyłu. breaker_tripped oznacza zadziałanie bezpiecznika lub różnicówki; "
+        "tank_side określa stronę względem zbiornika na wodę. Samo z boku, bliżej przodu lub tyłu "
+        "nie ustala strony względem zbiornika. "
         "ręczne wyłączenie ekspresu to inna obserwacja. "
-        "Rozróżnij wodę POD tacką i wodę W tacce. tray_excess = czy do tacki trafia nadmiernie dużo wody. "
-        "tray_cleaned i brew_area_cleaned opisują ostatnie ręczne mycie tacki oraz zaparzacza z jego komorą. "
-        "Automatyczne płukanie to osobna czynność. Uwzględnij, którego elementu dotyczy ostatnie pytanie. "
+        "Rozróżnij wodę POD tacką i wodę W tacce. Jeśli podano tylko okolicę tacki, wpisz przy tacce. "
+        "tray_excess = czy do tacki trafia nadmiernie dużo wody. "
+        "Pełna lub przelewająca się tacka oznacza w tacce i tray_excess tak. "
+        "makes_coffee = czy ekspres przygotowuje kawę. Jeśli użytkownik nie próbował, wpisz nie wiadomo. "
         "Dla pominiętych informacji wpisuj bez zmiany. Jeśli użytkownik wyraźnie mówi, że nie wie "
         "lub nie widział początku, dla fault_timing wybierz 'użytkownik nie widział początku lub nie pamięta'. "
         "Sama odpowiedź 'dopiero po kawie' nie mówi, czy widział pierwsze krople: wpisz bez zmiany. "
@@ -122,25 +142,32 @@ def extract_facts(state):
     if not isinstance(facts, dict) or facts.keys() != FIELDS.keys():
         raise ValueError("Niepoprawna struktura obserwacji")
     updates = {"use_cpu": cpu, "previous_reply": message}
+    text = normalize(message)
+    side_reference = re.search(r"zbiornik|pojemnik|przeciw|drugiej|\b(prawej|prawo|lewej|lewo)\b", text)
     for field, values in FIELDS.items():
         value = facts[field]
         if value != "bez zmiany" and value not in values:
             raise ValueError("Niepoprawna wartość pola " + field)
         if field == "leak_location":
-            text = normalize(message)
+            if state.get("pending_question") == "tank_side" and value == "przy zbiorniku na wodę":
+                value = "bez zmiany"
+            if updates.get("tank_side") == "po przeciwnej stronie" and value == "przy zbiorniku na wodę":
+                value = "bez zmiany"
             explicit_side = re.search(r"\bz boku\b", text)
             uncertain_side = re.search(r"\b(nie|chyba|moze|albo|lub)\b", text)
-            if value not in (UNKNOWN, "bez zmiany") or (explicit_side and not uncertain_side):
+            if value not in (UNKNOWN, "bez zmiany") or "przy tacce" in text or (explicit_side and not uncertain_side):
                 value = supported_location(value, message, state)
-        if field == "breaker_tripped" and not re.search(r"bezpiecznik|roznicowk|korki|zabezpieczen|wylacznik nadpradow", normalize(message)):
+        if field == "tank_side" and not side_reference:
+            explicit_unknown = value == UNKNOWN and re.search(r"\bnie (wiem|pamietam|jestem pew\w*)", text)
+            if not explicit_unknown:
+                continue
+        if field == "breaker_tripped" and state.get("pending_question") != field and not re.search(r"bezpiecznik|roznicowk|korki|zabezpieczen|wylacznik nadpradow", normalize(message)):
             continue
-        if field in ("tray_cleaned", "brew_area_cleaned") and state.get("pending_question") != field:
-            text = normalize(message)
-            item_pattern = r"tac[cky]" if field == "tray_cleaned" else r"zaparzacz|komor"
-            if not re.search(r"my[lctj]|myci|czysz|czyst", text) or not re.search(item_pattern, text):
+        if field == "makes_coffee" and state.get("pending_question") != field:
+            if "kaw" not in normalize(message):
                 continue
         if field == "tray_excess" and state.get("pending_question") != field:
-            if not re.search(r"duz|spor|nadmiern|szybk|przelewa|wiecej|pelna|zwykle|normaln", normalize(message)):
+            if not re.search(r"duz|spor|nadmiern|szybk|przelew|wiecej|peln|zwykle|normaln", normalize(message)):
                 continue
         if value == "bez zmiany":
             continue
@@ -152,6 +179,9 @@ def extract_facts(state):
         if value == UNKNOWN and state.get("pending_question") != field and not state.get(field):
             continue
         updates[field] = value
+    if updates.get("tray_excess") == "tak" and not updates.get("leak_location") and not state.get("leak_location"):
+        if re.search(r"\btac[cky]", normalize(message)):
+            updates["leak_location"] = "w tacce"
     return updates
 
 
@@ -159,11 +189,6 @@ def tray_or_tank_reply(state, location):
     record_ids = []
     advice = []
     if location == "pod tacką":
-        for field, item in (("tray_cleaned", "tackę"), ("brew_area_cleaned", "zaparzacz i jego komorę")):
-            if not state.get(field):
-                return {"pending_question": field, "answer": f"Kiedy ostatnio ręcznie myłeś {item}?"}
-            if state[field] == "ponad miesiąc temu":
-                advice.append(f"Sprawdź i umyj {item} zgodnie z instrukcją użytkownika.")
         record_ids = ["saeco_granaroma_under_tray"]
     elif location == "w tacce":
         amount = state.get("tray_excess")
@@ -171,6 +196,11 @@ def tray_or_tank_reply(state, location):
             return {"pending_question": "tray_excess", "answer": "Czy do tacki trafia wyraźnie więcej wody niż zwykle?"}
         if amount != "tak":
             return {"pending_question": None, "answer": "Część wody z płukania trafia do tacki. Sama jej obecność nie wskazuje na usterkę."}
+        coffee = state.get("makes_coffee")
+        if not coffee:
+            return {"pending_question": "makes_coffee", "answer": "Czy ekspres robi kawę?"}
+        if coffee != "nie":
+            return {"pending_question": None, "answer": "Sama pełna tacka nie wystarcza do wskazania przyczyny."}
         record_ids = ["saeco_granaroma_hot_water_drain_leak", "saeco_granaroma_brew_unit_drain"]
     else:
         record_ids = ["saeco_granaroma_tank_crack"]
@@ -190,18 +220,29 @@ def choose_step(state):
     location = state.get("leak_location")
     timing = state.get("fault_timing")
     if state.get("breaker_tripped") == "tak":
-        return {"pending_question": None, "answer": "Przy wycieku i zadziałaniu zabezpieczenia pozostaw ekspres wyłączony. Nie uruchamiaj go ponownie. Przekaż urządzenie do serwisu i zgłoś oba objawy."}
+        return {"pending_question": None, "answer": "Nie uruchamiaj ponownie ekspresu. Zgłoś serwisowi wyciek i zadziałanie zabezpieczenia. W tej serii jednym z tropów jest nieszczelność złączki nad grzałką: woda może zalewać grzałkę."}
     if not location:
         return {"pending_question": "leak_location", "answer": QUESTIONS["leak_location"]}
+    if location == "przy tacce":
+        if state.get("pending_question") == "tray_position":
+            return {"pending_question": None, "answer": "Wiemy, że wodę widać przy tacce. Bez ustalenia, gdzie się zbiera, trudno wskazać przyczynę."}
+        return {"pending_question": "tray_position", "answer": "Gdzie zbiera się woda: pod spodem tacki czy w środku?"}
     if location in ("pod tacką", "w tacce", "przy zbiorniku na wodę"):
         return tray_or_tank_reply(state, location)
-    if location == "z boku" and state.get("pending_question") != "side_position":
-        return {"pending_question": "side_position", "answer": "Gdzie na boku było widać wodę: bliżej tyłu czy przodu ekspresu?"}
-    side_records = {"z boku bliżej tyłu": "saeco_granaroma_heater_fitting_leak",
-                    "z boku bliżej przodu": "saeco_granaroma_solenoid_leak"}
-    if location in side_records:
+    if location.startswith("z boku"):
+        side = state.get("tank_side")
+        if side == "od strony zbiornika":
+            return tray_or_tank_reply(state, "przy zbiorniku na wodę")
+        if side == UNKNOWN:
+            return {"pending_question": None, "answer": "Wodę widać z boku. Bez ustalenia strony względem zbiornika trudno zawęzić przyczynę."}
+        if side != "po przeciwnej stronie":
+            return {"pending_question": "tank_side", "answer": "Czy woda pojawia się od strony zbiornika na wodę, czy po przeciwnej stronie ekspresu?"}
+        if not state.get("breaker_tripped"):
+            return {"pending_question": "breaker_tripped", "answer": "Czy przy tym wycieku zadziałały bezpieczniki lub różnicówka?"}
+        if state["breaker_tripped"] == UNKNOWN:
+            return {"pending_question": None, "answer": "Brakuje informacji o zabezpieczeniu elektrycznym. Pozostaw cieknący ekspres wyłączony i zgłoś wyciek do serwisu."}
         for record in load_faults():
-            if record["id"] == side_records[location]:
+            if record["id"] == "saeco_granaroma_solenoid_leak":
                 causes = "; ".join(record["possible_causes"])
                 return {"pending_question": None, "answer": f"Wodę widać {location}. Tropy serwisowe: {causes}. Źródło wymaga potwierdzenia w serwisie."}
     if location == "z tyłu ekspresu" and timing in (None, UNKNOWN) and not state.get("onset_clarified"):

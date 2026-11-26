@@ -9,26 +9,34 @@ from src.granaroma_demo import build_interview
 
 def extraction(location="bez zmiany", noticed="bez zmiany", timing="bez zmiany", breaker="bez zmiany", **extra):
     facts = {"leak_location": location, "noticed_at": noticed, "fault_timing": timing, "breaker_tripped": breaker}
-    facts.update(tray_cleaned="bez zmiany", brew_area_cleaned="bez zmiany", tray_excess="bez zmiany")
+    facts.update(makes_coffee="bez zmiany", tray_excess="bez zmiany", tank_side="bez zmiany")
     facts.update(extra)
     return AIMessage(content=json.dumps(facts))
 
 
 class TestGranAromaDemo(unittest.TestCase):
     @patch("src.granaroma_demo.llm")
-    def test_under_tray_cleaning_history(self, model):
-        model.invoke.side_effect = [extraction("pod tacką"), extraction(tray_cleaned="w ostatnim miesiącu"),
-                                    extraction(brew_area_cleaned="ponad miesiąc temu")]
+    def test_vague_tray_location_is_clarified(self, model):
+        for reply, location, next_question in (("pod spodem", "pod tacką", None),
+                                                ("w środku", "w tacce", "tray_excess"),
+                                                ("nie wiem", "bez zmiany", None)):
+            with self.subTest(reply=reply):
+                model.invoke.side_effect = [extraction("w tacce"), extraction(location)]
+                graph = build_interview()
+                config = {"configurable": {"thread_id": reply}}
+                first = graph.invoke({"message": "Jest mokro przy tacce."}, config)
+                self.assertEqual(first["pending_question"], "tray_position")
+                final = graph.invoke({"message": reply}, config)
+                self.assertEqual(final["pending_question"], next_question)
+
+    @patch("src.granaroma_demo.llm")
+    def test_under_tray_cleaning_advice(self, model):
+        model.invoke.return_value = extraction("pod tacką")
         graph = build_interview()
         config = {"configurable": {"thread_id": "under-tray"}}
-        first = graph.invoke({"message": "Kałuża pod tacką"}, config)
-        self.assertEqual(first["pending_question"], "tray_cleaned")
-        second = graph.invoke({"message": "wczoraj"}, config)
-        self.assertEqual(second["pending_question"], "brew_area_cleaned")
-        final = graph.invoke({"message": "dwa miesiące temu"}, config)
-        self.assertEqual(final["tray_cleaned"], "w ostatnim miesiącu")
-        self.assertIn("umyj zaparzacz i jego komorę", final["answer"])
-        self.assertNotIn("umyj tackę", final["answer"])
+        final = graph.invoke({"message": "Kałuża pod tacką"}, config)
+        self.assertIsNone(final["pending_question"])
+        self.assertIn("Oczyść miejsce", final["answer"])
 
     @patch("src.granaroma_demo.llm")
     def test_tray_volume_and_tank(self, model):
@@ -39,6 +47,9 @@ class TestGranAromaDemo(unittest.TestCase):
             first = graph.invoke({"message": "Woda w tacce"}, config)
             self.assertEqual(first["pending_question"], "tray_excess")
             final = graph.invoke({"message": quantity}, config)
+            if quantity == "tak":
+                self.assertEqual(final["pending_question"], "makes_coffee")
+                final = graph.invoke({"message": "nie"}, config)
             self.assertEqual("zaworu gorącej wody" in final["answer"], quantity == "tak")
             self.assertEqual("zaparzacza" in final["answer"], quantity == "tak")
         model.invoke.side_effect = [extraction("przy zbiorniku na wodę")]
@@ -47,33 +58,60 @@ class TestGranAromaDemo(unittest.TestCase):
         self.assertIn("Pęknięcie pojemnika", final["answer"])
 
     @patch("src.granaroma_demo.llm")
+    def test_full_tray_with_coffee_status_already_known(self, model):
+        for coffee, reply in (("nie", "Nie robi kawy"), ("tak", "Robi kawę")):
+            model.invoke.return_value = extraction(tray_excess="tak", makes_coffee=coffee)
+            state = build_interview().invoke({"message": "Tacka się przelewa. " + reply},
+                                             {"configurable": {"thread_id": coffee}})
+            self.assertIsNone(state["pending_question"])
+            self.assertEqual("zaparzacza" in state["answer"], coffee == "nie")
+
+    @patch("src.granaroma_demo.llm")
     def test_explicit_side_survives_incomplete_extraction(self, model):
         model.invoke.side_effect = [
             extraction(timing="użytkownik nie widział początku lub nie pamięta"),
-            extraction(location="z boku bliżej przodu"),
+            extraction(location="z boku", tank_side="nie wiadomo"),
         ]
         graph = build_interview()
         config = {"configurable": {"thread_id": "side-with-coffee"}}
         state = graph.invoke({"message": "Zauważyłem wyciek z boku ekspresu, zrobiłem kilka kaw wcześniej"}, config)
         self.assertEqual(state["leak_location"], "z boku")
-        self.assertEqual(state["pending_question"], "side_position")
+        self.assertEqual(state["pending_question"], "tank_side")
         self.assertIsNone(state.get("fault_timing"))
-        final = graph.invoke({"message": "bliżej przodu"}, config)
+        state = graph.invoke({"message": "bliżej przodu"}, config)
+        self.assertEqual(state["pending_question"], "tank_side")
+        state = graph.invoke({"message": "po przeciwnej stronie"}, config)
+        self.assertEqual(state["pending_question"], "breaker_tripped")
+        final = graph.invoke({"message": "nie"}, config)
         self.assertIn("elektrozaworu", final["answer"])
 
     @patch("src.granaroma_demo.llm")
     def test_side_location_selects_service_record(self, model):
-        for detail, cause in (("tyłu", "złączki grzałki"), ("przodu", "uszczelka przy połączeniu wężyka")):
-            model.invoke.side_effect = [extraction("z tyłu ekspresu", "po kawie"), extraction("z boku"),
-                                        extraction("z boku bliżej " + detail)]
+        for reply, cause in (("tak", "złączki nad grzałką"), ("nie", "uszczelka przy połączeniu wężyka"),
+                             ("nie wiem", "Brakuje informacji")):
+            model.invoke.side_effect = [extraction("z tyłu ekspresu", "po kawie"), extraction("z boku")]
             graph = build_interview()
-            config = {"configurable": {"thread_id": detail}}
+            config = {"configurable": {"thread_id": reply}}
             first = graph.invoke({"message": "Kałuża była po kawie."}, config)
             self.assertEqual(first["pending_question"], "leak_location")
             second = graph.invoke({"message": "Z boku."}, config)
-            self.assertEqual(second["pending_question"], "side_position")
-            final = graph.invoke({"message": "Bliżej " + detail}, config)
+            self.assertEqual(second["pending_question"], "tank_side")
+            side = graph.invoke({"message": "z drugiej"}, config)
+            self.assertEqual(side["pending_question"], "breaker_tripped")
+            final = graph.invoke({"message": reply}, config)
             self.assertIn(cause, final["answer"])
+
+    @patch("src.granaroma_demo.llm")
+    def test_side_near_front_does_not_identify_component(self, model):
+        for reply, expect_tank in (("od strony zbiornika", True), ("nie wiem", False)):
+            model.invoke.return_value = extraction("z boku", tank_side="po przeciwnej stronie")
+            graph = build_interview()
+            config = {"configurable": {"thread_id": reply}}
+            first = graph.invoke({"message": "Cieknie z boku bliżej przodu"}, config)
+            self.assertEqual(first["pending_question"], "tank_side")
+            final = graph.invoke({"message": reply}, config)
+            self.assertNotIn("elektrozaworu", final["answer"])
+            self.assertEqual("Pęknięcie pojemnika" in final["answer"], expect_tank)
 
     @patch("src.granaroma_demo.llm")
     def test_breaker_stops_interview_even_without_location(self, model):

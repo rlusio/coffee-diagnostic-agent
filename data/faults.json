@@ -593,11 +593,11 @@
     "symptoms": [
       "wyciek na złączce grzałki",
       "pęknięta złączka przy grzałce",
-      "niewielki wyciek z boku bliżej tyłu ekspresu",
+      "wyciek i zadziałanie bezpiecznika",
       "woda przy wyjściu z grzałki"
     ],
     "possible_causes": [
-      "Pęknięcie złączki grzałki",
+      "Nieszczelność złączki nad grzałką",
       "Uszkodzone uszczelnienie połączenia"
     ],
     "diagnostic_questions": [
@@ -639,7 +639,7 @@
     "symptoms": [
       "wyciek z elektrozaworu",
       "cieknie listwa elektrozaworów",
-      "niewielki wyciek z boku bliżej przodu ekspresu",
+      "wyciek z boku po stronie przeciwnej do zbiornika",
       "wyciek z zespołu elektrozaworów"
     ],
     "possible_causes": [
@@ -691,7 +691,7 @@
     ],
     "possible_causes": [
       "Nieszczelność zaworu gorącej wody",
-      "Pęknięcie elementu łączącego układ zaworowy z drogą gorącej wody"
+      "Uszkodzenie uszczelnień zaworu gorącej wody"
     ],
     "diagnostic_questions": [
       "Gdzie pojawia się woda: pod urządzeniem, w tacce, w pojemniku na fusy czy przy dyszy?",
@@ -743,7 +743,7 @@
     ],
     "diagnostic_questions": [],
     "safe_checks": [
-      "Obejrzyj tackę i jej miejsce osadzenia. Czy tacka daje się prawidłowo wsunąć?"
+      "Oczyść miejsce, w które wsuwasz tackę, i osadź ją ponownie."
     ],
     "applicability": {
       "brands": [
