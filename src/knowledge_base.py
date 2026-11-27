@@ -81,6 +81,9 @@ def find_faults(description: str, brand: str = '', model: str = '', top_k: int =
     query = tokenize(description)
     results = []
     for record in faults:
+        # These hypotheses require a combination of confirmed observations.
+        if record.get("observation_patterns"):
+            continue
         if not _is_applicable(record, brand, model):
             continue
         required_words = record.get("required_symptom_words", [])

@@ -112,6 +112,10 @@ def show_diagnostics(state):
 
     candidates = state.get("candidates", [])
     if candidates:
+        if state.get("component_domain"):
+            for record in candidates:
+                print("Rekord pasujący do obserwacji:", record["id"])
+            return
         first = candidates[0]
         print(f"Pierwszy rekord: {first['id']} (wynik dopasowania: {first['score']})")
         for candidate in candidates[1:]:

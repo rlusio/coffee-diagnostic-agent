@@ -8,99 +8,14 @@ from src.agent import build_agent, finish_reply, update_facts
 class TestAgentRouting(unittest.TestCase):
 
     @patch("src.agent.llm")
-    def test_granaroma_asks_what_at_coffee_time_means(self, llm):
+    def test_rear_leak_in_granaroma_ends_without_timing_question(self, llm):
         agent = build_agent()
-        for reply, timing in (("dopiero jak skończy robić kawę", "po zakończeniu parzenia"),
-                              ("już kiedy kawa leci do filiżanki", "podczas parzenia"),
-                              ("nie wiem", "przy kawie")):
-            with self.subTest(reply=reply):
-                config = {"configurable": {"thread_id": reply}}
-                agent.invoke({"brand": "saeco", "model": "granaroma", "message": "ekspres cieknie"}, config)
-                agent.invoke({"message": "z tylu"}, config)
-                state = agent.invoke({"message": "przy kawie"}, config)
-                self.assertEqual(state["fault_timing"], "przy kawie")
-                self.assertEqual(state["pending_question"], "coffee_leak_phase")
-                state = agent.invoke({"message": reply}, config)
-                self.assertEqual(state["fault_timing"], timing)
-                self.assertEqual(state["pending_question"], "rear_leak_during_hot_water")
-                state = agent.invoke({"message": "nie"}, config)
-                self.assertEqual("obok przepływomierza" in state["answer"], timing == "po zakończeniu parzenia")
+        for description in ("woda z tyłu", "woda z tyłu podczas parzenia", "woda z tyłu na postoju"):
+            config = {"configurable": {"thread_id": description}}
+            result = agent.invoke({"brand": "Saeco", "model": "Gran Aroma", "message": description}, config)
+            self.assertIsNone(result["pending_question"])
+            self.assertIn("najprawdopodobniej pochodzi z zaworu spustowego", result["answer"])
         llm.invoke.assert_not_called()
-
-    @patch("src.agent.llm")
-    def test_short_leak_report_uses_model_location_and_timing(self, llm):
-        agent = build_agent()
-        config = {"configurable": {"thread_id": "short-leak"}}
-        state = agent.invoke({"message": "cieknie", "brand": "saeco", "model": "gran aroma"}, config)
-        self.assertEqual(state["pending_question"], "leak_location")
-        state = agent.invoke({"message": "z tylu"}, config)
-        self.assertEqual(state["pending_question"], "fault_timing")
-        state = agent.invoke({"message": "po zrobieniu kawy"}, config)
-        self.assertEqual(state["pending_question"], "rear_leak_during_hot_water")
-        state = agent.invoke({"message": "tak"}, config)
-        self.assertEqual(state["pending_question"], "hot_water_leak_phase")
-        state = agent.invoke({"message": "nie wiem"}, config)
-        self.assertIsNone(state["pending_question"])
-        self.assertIn("obok przepływomierza", state["answer"])
-        llm.invoke.assert_not_called()
-
-    @patch("src.agent.llm")
-    def test_granaroma_leak_with_two_observed_timings(self, llm):
-        agent = build_agent()
-        config = {"configurable": {"thread_id": "two-timings"}}
-        first = agent.invoke({"message": "ekspres przecieka", "brand": "saeco",
-                              "model": "gran aroma"}, config)
-        self.assertEqual(first["pending_question"], "leak_location")
-        timing = "podczas płukania oraz gorącej wody, kawy nie robiłem bo nie chciałem zalać go"
-        second = agent.invoke({"message": timing}, config)
-        self.assertEqual(second["fault_timing"], "podczas płukania, podczas poboru gorącej wody")
-        self.assertEqual(second["answer"], "Gdzie pojawia się woda?")
-        self.assertIsNone(second.get("hot_water_flow"))
-        final = agent.invoke({"message": "z tyłu"}, config)
-        self.assertEqual(final["pending_question"], "hot_water_leak_phase")
-        final = agent.invoke({"message": "na końcu"}, config)
-        self.assertIsNone(final["pending_question"])
-        self.assertIn("obok przepływomierza", final["answer"])
-        llm.invoke.assert_not_called()
-
-    @patch("src.agent.llm")
-    def test_granaroma_rear_leak_during_rinse(self, llm):
-        agent = build_agent()
-        for reply, expected in (("tak", True), ("nie", False), ("nie wiem", None)):
-            with self.subTest(reply=reply):
-                config = {"configurable": {"thread_id": reply}}
-                agent.invoke({"message": "Woda leje się z ekspresu", "brand": "saeco",
-                              "model": "granaroma"}, config)
-                agent.invoke({"message": "z tyłu"}, config)
-                state = agent.invoke({"message": "w trakcie płukania od razu"}, config)
-                self.assertEqual(state["pending_question"], "rear_leak_during_hot_water")
-                final = agent.invoke({"message": reply}, config)
-                if expected is True:
-                    self.assertEqual(final["pending_question"], "hot_water_leak_phase")
-                    final = agent.invoke({"message": "w trakcie nalewania"}, config)
-                    self.assertIn("czy zawór się domyka", final["answer"])
-                self.assertIs(final.get("rear_leak_during_hot_water"), expected)
-                self.assertIsNone(final.get("hot_water_flow"))
-                self.assertIsNone(final["pending_question"])
-                self.assertIn("podczas płukania", final["answer"])
-                self.assertIn("Trop z przypadku serwisowego tej serii", final["answer"])
-                self.assertIn("obok przepływomierza", final["answer"])
-        llm.invoke.assert_not_called()
-
-    def test_granaroma_discharge_timings(self):
-        agent = build_agent()
-        for timing, hose_expected in (("tuż po zaparzeniu kawy", True), ("po spienianiu mleka", True),
-                                      ("podczas czyszczenia układu mlecznego", True),
-                                      ("podczas parzenia", False), ("w trakcie nalewania gorącej wody", False)):
-            with self.subTest(timing=timing):
-                config = {"configurable": {"thread_id": timing}}
-                agent.invoke({"message": "ekspres przecieka", "brand": "Saeco", "model": "GranAroma"}, config)
-                agent.invoke({"message": "z tyłu"}, config)
-                result = agent.invoke({"message": timing}, config)
-                if result["pending_question"] == "rear_leak_during_hot_water":
-                    result = agent.invoke({"message": "nie"}, config)
-                self.assertIsNone(result["pending_question"])
-                self.assertEqual("obok przepływomierza" in result["answer"], hose_expected)
 
     @patch("src.agent.llm")
     def test_external_leak_with_brand_and_series_in_one_field(self, llm):
@@ -113,7 +28,7 @@ class TestAgentRouting(unittest.TestCase):
         self.assertEqual(first["pending_question"], "leak_location")
         second = agent.invoke({"message": "Woda z tyłu ekspresu"}, config)
         self.assertEqual(second["leak_location"], "z tyłu ekspresu")
-        self.assertEqual(second["pending_question"], "fault_timing")
+        self.assertIsNone(second["pending_question"])
         llm.invoke.assert_not_called()
 
     def test_short_sound_correction_while_waiting_for_model(self):

@@ -1,5 +1,299 @@
 [
   {
+    "id": "water_measurement",
+    "category": "water_system",
+    "scope": "generic",
+    "applicability": {
+      "brands": []
+    },
+    "symptoms": [
+      "Pompa pracuje i woda płynie normalnie, mimo to pojawia się błąd napełnienia lub cykl zostaje przerwany."
+    ],
+    "observation_patterns": [
+      {
+        "pump_audible": "tak",
+        "water_flow": "normalnie",
+        "cycle_error": "tak"
+      }
+    ],
+    "possible_causes": [
+      "problem z pomiarem przepływu (wirnik przepływomierza, przewody, złącza lub nieprawidłowy sygnał)",
+      "inna rozbieżność między rzeczywistym a mierzonym przepływem"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Zanotuj treść komunikatu i czy strumień utrzymuje się do przerwania cyklu."
+    ],
+    "service_check": "Sprawdzenie przepływomierza, impulsów i połączeń.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "water_pump_silent",
+    "category": "water_system",
+    "scope": "generic",
+    "applicability": {
+      "brands": []
+    },
+    "symptoms": [
+      "Nie słychać pompy i woda nie wypływa."
+    ],
+    "observation_patterns": [
+      {
+        "pump_audible": "nie",
+        "water_flow": "wcale"
+      }
+    ],
+    "possible_causes": [
+      "pompa nie uruchamia się z powodu usterki pompy, zasilania, sterowania, przewodów lub blokady startu"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Sprawdź osadzenie pełnego zbiornika i zapisz komunikat urządzenia."
+    ],
+    "service_check": "Weryfikacja przyczyny braku pracy pompy.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "water_restricted",
+    "category": "water_system",
+    "scope": "generic",
+    "applicability": {
+      "brands": []
+    },
+    "symptoms": [
+      "Pompa pracuje, ale wypływ jest słaby lub zanika."
+    ],
+    "observation_patterns": [
+      {
+        "pump_audible": "tak",
+        "water_flow": "słabo"
+      },
+      {
+        "pump_audible": "tak",
+        "water_flow": "kroplami"
+      },
+      {
+        "pump_audible": "tak",
+        "water_flow": "wcale"
+      },
+      {
+        "pump_audible": "tak",
+        "water_flow": "nieregularnie"
+      }
+    ],
+    "possible_causes": [
+      "ograniczony przepływ przez kamień lub zanieczyszczenia w przewodzie, zaworze, termobloku bądź zaparzaczu",
+      "problem z pobieraniem wody"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Sprawdź zbiornik i filtr zgodnie z instrukcją. Przy braku wody przerwij próby."
+    ],
+    "service_check": "Ustalenie miejsca ograniczenia przepływu.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "water_air",
+    "model_notes": {
+      "Saeco GranAroma": {
+        "05": "Powietrze w układzie wodnym.",
+        "source": "https://saeco.com/care/faq/My-Saeco-Espresso-Machine-is-showing-an-error-code/"
+      }
+    },
+    "category": "water_system",
+    "scope": "generic",
+    "applicability": {
+      "brands": []
+    },
+    "symptoms": [
+      "Głośna praca pompy po opróżnieniu zbiornika, wymianie filtra lub postoju, albo poprawa po odpowietrzeniu."
+    ],
+    "observation_patterns": [
+      {
+        "pump_loud": "tak",
+        "air_trigger": "tak"
+      },
+      {
+        "priming_helped": "tak"
+      },
+      {
+        "granaroma_05": "tak"
+      }
+    ],
+    "possible_causes": [
+      "powietrze w obiegu lub problem z napełnieniem przez filtr"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Sprawdź poziom wody, osadzenie zbiornika i przygotowanie filtra. Napełnij obieg zgodnie z instrukcją modelu. Nie ponawiaj prób na sucho."
+    ],
+    "service_check": "Jeśli przepływ nie powróci, potrzebna jest kontrola obiegu.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "grinder_chute_damage",
+    "category": "grinder",
+    "scope": "Saeco/Philips z wyjmowanym zaparzaczem",
+    "applicability": {
+      "brands": [
+        "Saeco",
+        "Philips"
+      ]
+    },
+    "symptoms": [
+      "Młynek mieli, a sucha zmielona kawa rozsypuje się w obudowie."
+    ],
+    "observation_patterns": [
+      {
+        "grinder_audible": "tak",
+        "loose_grounds": "tak"
+      }
+    ],
+    "possible_causes": [
+      "pęknięty lub odłączony kanał transportowy",
+      "uszkodzony wysyp albo źle osadzone prowadzenie kawy"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Po wyłączeniu urządzenia obejrzyj dostępną komorę zgodnie z instrukcją."
+    ],
+    "service_check": "Sprawdzenie mocowania i szczelności wysypu.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "grinder_chute_blocked",
+    "category": "grinder",
+    "scope": "Saeco/Philips z wyjmowanym zaparzaczem",
+    "applicability": {
+      "brands": [
+        "Saeco",
+        "Philips"
+      ]
+    },
+    "symptoms": [
+      "Młynek pracuje, a kawa zalega w kanale."
+    ],
+    "observation_patterns": [
+      {
+        "grinder_audible": "tak",
+        "chute_blocked": "tak"
+      }
+    ],
+    "possible_causes": [
+      "zator kanału ze zbitego osadu, wilgotnej kawy lub zanieczyszczeń"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Oczyść tylko dostępny kanał w sposób opisany w instrukcji modelu."
+    ],
+    "service_check": "Kontrola drożności i stanu kanału, jeśli objaw pozostanie.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "grinder_silent",
+    "category": "grinder",
+    "scope": "Saeco/Philips z wyjmowanym zaparzaczem",
+    "applicability": {
+      "brands": [
+        "Saeco",
+        "Philips"
+      ]
+    },
+    "symptoms": [
+      "Podczas próby mielenia nie słychać młynka."
+    ],
+    "observation_patterns": [
+      {
+        "grinder_audible": "nie"
+      }
+    ],
+    "possible_causes": [
+      "brak uruchomienia młynka przez silnik, zasilanie, sterowanie, przewody, zabezpieczenie lub blokadę mechanizmu"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Zapisz komunikat z wyświetlacza."
+    ],
+    "service_check": "Kontrola mechanizmu i obwodu młynka przed decyzją o wymianie.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
+    "id": "grinder_stalled",
+    "category": "grinder",
+    "scope": "Saeco/Philips z wyjmowanym zaparzaczem",
+    "applicability": {
+      "brands": [
+        "Saeco",
+        "Philips"
+      ]
+    },
+    "symptoms": [
+      "Młynek próbuje ruszyć, zatrzymuje się lub wydaje nietypowy dźwięk."
+    ],
+    "observation_patterns": [
+      {
+        "grinder_abnormal": "tak"
+      },
+      {
+        "foreign_body": "tak"
+      },
+      {
+        "wet_grinder": "tak"
+      }
+    ],
+    "possible_causes": [
+      "ciało obce między żarnami",
+      "uszkodzenie żaren lub napędu",
+      "zawilgocenie albo zbrylone ziarna blokujące mechanizm"
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [
+      "Przerwij próby mielenia. Nie sięgaj do żaren."
+    ],
+    "service_check": "Ocena blokady i zakresu uszkodzeń.",
+    "verified": false,
+    "evidence_status": "tentative",
+    "source": {
+      "type": "technician_observation",
+      "reference": "Scenariusze diagnostyczne przekazane przez serwisanta."
+    }
+  },
+  {
     "id": "water_no_flow_001",
     "category": "water_system",
     "component": "hydraulic_circuit",
@@ -535,6 +829,37 @@
     "verified": false,
     "notes": "Przed wskazaniem elektrozaworu należy ustalić model i dokładny przebieg wody.",
     "liquid_destination": "front_accessory_connector"
+  },
+  {
+    "id": "saeco_granaroma_rear_drain_valve",
+    "required_symptom_words": ["tyłu", "tylnej", "tylną", "spustowego", "ekspresem"],
+    "category": "water_leak",
+    "component": "drain_valve",
+    "scope": "brand_observation",
+    "symptoms": [
+      "wyciek z tyłu ekspresu",
+      "woda za ekspresem"
+    ],
+    "possible_causes": [
+      "W Saeco GranAroma wyciek z tyłu najprawdopodobniej pochodzi z zaworu spustowego. Źródło wymaga potwierdzenia w serwisie."
+    ],
+    "diagnostic_questions": [],
+    "safe_checks": [],
+    "applicability": {
+      "brands": [
+        "Saeco"
+      ],
+      "models": [],
+      "series": [
+        "GranAroma"
+      ]
+    },
+    "evidence_status": "observed",
+    "verified": false,
+    "source": {
+      "type": "technician_observation",
+      "reference": "Hipoteza oparta na doświadczeniu serwisowym użytkownika dla serii GranAroma."
+    }
   },
   {
     "id": "saeco_granaroma_hose_solenoid_leak",

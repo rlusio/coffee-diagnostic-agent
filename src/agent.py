@@ -9,6 +9,7 @@ import re
 
 from langgraph.graph import END, START, StateGraph
 from src.knowledge_base import find_faults, load_faults, normalize, normalize_identifier, split_catalog_device
+from src.component_dialogue import component_reply, domain_for, observation_line
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_ollama import ChatOllama
 from ollama import ResponseError
@@ -31,8 +32,6 @@ class DiagnosticState(TypedDict, total=False): #total false - nie wymagamy wszys
     leak_location: str | None
     fault_timing: str | None
     hot_water_flow: bool | None
-    rear_leak_during_hot_water: bool | None
-    hot_water_leak_phase: str
     grinder_audible: bool | None
     no_beans_warning: bool | None
     milk_delivery: str | None
@@ -42,6 +41,9 @@ class DiagnosticState(TypedDict, total=False): #total false - nie wymagamy wszys
     asked_questions: list[str]
     question_answers: dict[str, str]
     shown_record_ids: list[str]
+    component_domain: str
+    component_facts: dict[str, str]
+    component_conflicts: list[str]
 
 
 LOCATIONS = {
@@ -67,10 +69,7 @@ TIMINGS = {
 QUESTIONS = {
     "leak_location": "Gdzie pojawia się woda?",
     "fault_timing": "Kiedy występuje problem?",
-    "coffee_leak_phase": "Czy woda pojawia się już wtedy, gdy kawa leci do filiżanki, czy dopiero gdy ekspres kończy parzenie?",
     "hot_water_flow": "Czy gorąca woda leci prawidłowo?",
-    "rear_leak_during_hot_water": "Czy przy pobieraniu gorącej wody też widzisz wyciek z tyłu ekspresu?",
-    "hot_water_leak_phase": "Czy cieknie już w trakcie nalewania gorącej wody, czy dopiero na końcu, gdy strumień ustaje?",
     "grinder_audible": "Czy przy próbie przygotowania kawy słychać młynek?",
     "no_beans_warning": "Czy urządzenie wyświetla komunikat o braku ziaren?",
     "milk_delivery": "Czy mleko nie jest pobierane wcale, leci słabo, czy tylko nie tworzy piany?",
@@ -210,15 +209,6 @@ def update_facts(state: DiagnosticState) -> dict:
                     values.append("podczas poboru gorącej wody")
             updates[field] = ", ".join(values)
 
-    if pending == "coffee_leak_phase":
-        if message in ("dopiero jak skonczy robic kawe", "dopiero po", "po zakonczeniu", "na koncu"):
-            updates["fault_timing"] = "po zakończeniu parzenia"
-        elif message in ("w trakcie", "jak leci kawa", "podczas nalewania"):
-            updates["fault_timing"] = "podczas parzenia"
-        coffee_phase = updates.get("fault_timing")
-        if coffee_phase in ("podczas parzenia", "po zakończeniu parzenia"):
-            updates["fault_timing"] = state["fault_timing"].replace("przy kawie", coffee_phase)
-
     flow = re.search(r"\bgoraca woda (nie dziala|nie leci|nie plynie|leci slabo|dziala|leci prawidlowo|plynie normalnie)\b", message)
     if flow:
         flow_description = flow.group(1)
@@ -228,25 +218,6 @@ def update_facts(state: DiagnosticState) -> dict:
             updates["hot_water_flow"] = True
         elif message in {"nie", "nie dziala", "nie leci", "slabo"}:
             updates["hot_water_flow"] = False
-    if pending == "rear_leak_during_hot_water":
-        if message in ("tak", "tez cieknie", "tak, tez cieknie"):
-            updates[pending] = True
-        elif message in ("nie", "nie cieknie", "nie, jest sucho"):
-            updates[pending] = False
-    if pending in ("rear_leak_during_hot_water", "hot_water_leak_phase"):
-        reply_timing = updates.get("fault_timing")
-        if reply_timing == "w trakcie nalewania gorącej wody":
-            updates["hot_water_leak_phase"] = "w trakcie nalewania"
-        elif reply_timing == "po odcięciu strumienia gorącej wody":
-            updates["hot_water_leak_phase"] = "po odcięciu strumienia"
-        if "hot_water_leak_phase" in updates and state.get("fault_timing"):
-            del updates["fault_timing"]
-        if message in ("na koncu", "dopiero na koncu", "na sam koniec", "na samym koncu", "po odcieciu", "po odcieciu strumienia"):
-            updates["hot_water_leak_phase"] = "po odcięciu strumienia"
-        elif message in ("w trakcie", "podczas nalewania", "w trakcie nalewania", "caly czas"):
-            updates["hot_water_leak_phase"] = "w trakcie nalewania"
-        if "hot_water_leak_phase" in updates:
-            updates["rear_leak_during_hot_water"] = True
     if not pending or not message:
         return updates
 
@@ -290,16 +261,11 @@ MIN_ANSWER_SCORE = 2
 def decide(state: DiagnosticState) -> str:
     candidates = state.get("candidates", [])
 
-    if state.get("leak_location") == "z tyłu ekspresu" and state.get("fault_timing"):
+    if state.get("leak_location") == "z tyłu ekspresu":
         brand = normalize_identifier(state.get("brand", ""))
         model = normalize_identifier(state.get("model", ""))
         if brand == "saeco" and model == "granaroma":
-            if state.get("pending_question") in ("coffee_leak_phase", "rear_leak_during_hot_water", "hot_water_leak_phase"):
-                return "granaroma_rear_leak"
-            if not candidates or candidates[0]["score"] < MIN_ANSWER_SCORE:
-                return "granaroma_rear_leak"
-            if candidates[0]["id"] in ("leak_external_generic", "saeco_granaroma_hose_solenoid_leak"):
-                return "granaroma_rear_leak"
+            return "granaroma_rear_leak"
 
     if not candidates:
         return "clarify"
@@ -394,8 +360,6 @@ def format_observations(state: DiagnosticState) -> list[str]:
         "leak_location": "Gdzie widać wodę",
         "fault_timing": "Moment usterki",
         "hot_water_flow": "Gorąca woda działa prawidłowo",
-        "rear_leak_during_hot_water": "Wyciek z tyłu przy pobieraniu gorącej wody",
-        "hot_water_leak_phase": "Moment wycieku przy gorącej wodzie",
         "grinder_audible": "Słychać młynek",
         "no_beans_warning": "Komunikat o braku ziaren",
         "milk_delivery": "Podawanie mleka",
@@ -412,6 +376,9 @@ def format_observations(state: DiagnosticState) -> list[str]:
         elif value is False:
             value = "nie"
         observations.append(f"{label}: {value}")
+    for field, value in state.get("component_facts", {}).items():
+        if field not in state.get("component_conflicts", []):
+            observations.append(observation_line(field, value))
     return observations
 
 
@@ -522,50 +489,20 @@ Pasujące rekordy:
 
 
 def granaroma_rear_leak_reply(state: DiagnosticState) -> dict:
-    timing = state["fault_timing"]
-    topic = "rear_leak_during_hot_water"
-    observed = state.get(topic)
-    phase = state.get("hot_water_leak_phase")
-    if "w trakcie nalewania gorącej wody" in timing:
-        phase = "w trakcie nalewania"
-    elif "po odcięciu strumienia gorącej wody" in timing:
-        phase = "po odcięciu strumienia"
-    if phase or "podczas poboru gorącej wody" in timing:
-        observed = True
-    summary = f"Wodę widać z tyłu ekspresu {timing}."
-    answers = state.get("question_answers", {})
-    pending_needed = observed is None or (observed and not phase)
-    precise_coffee_timing = "podczas parzenia" in timing or "po zakończeniu parzenia" in timing
-    if "przy kawie" in timing and not precise_coffee_timing and "coffee_leak_phase" not in answers:
-        topic = "coffee_leak_phase"
-        pending_needed = True
-    elif observed is True and not phase:
-        topic = "hot_water_leak_phase"
-    if pending_needed and topic not in answers:
-        asked = state.get("asked_questions", []).copy()
-        if topic not in asked:
-            asked.append(topic)
-        return {"answer": summary + "\n" + QUESTIONS[topic],
-                "pending_question": topic, "asked_questions": asked}
-
-    if observed is False:
-        summary += " Przy pobieraniu gorącej wody z tyłu jest sucho."
-    if phase == "po odcięciu strumienia" and "po odcięciu strumienia" not in timing:
-        summary += " Przy gorącej wodzie wyciek widać dopiero po odcięciu strumienia."
-    if phase == "w trakcie nalewania":
-        summary += " Wyciek przy ciągłym nalewaniu nie odpowiada zwykłemu zrzutowi po odcięciu strumienia. Serwis może sprawdzić, czy zawór się domyka i czy osad utrudnia jego pracę."
-    discharge_timings = ("podczas płukania", "po zakończeniu parzenia", "po spienianiu mleka",
-                         "podczas czyszczenia układu mlecznego")
-    matches_discharge = any(moment in timing for moment in discharge_timings)
-    if phase != "po odcięciu strumienia" and not matches_discharge:
-        return {"answer": summary + " Źródło wycieku wymaga ustalenia w serwisie.", "pending_question": None}
     for record in load_faults():
-        if record["id"] == "saeco_granaroma_hose_solenoid_leak" and record.get("evidence_status") == "observed":
-            for cause in record["possible_causes"]:
-                summary += "\nTrop z przypadku serwisowego tej serii: " + cause.rstrip(".") + "."
-            break
-    summary += "\nŻeby potwierdzić źródło w tym egzemplarzu, serwis musi ustalić, z którego połączenia wypływa woda."
-    return {"answer": summary, "pending_question": None}
+        if record["id"] == "saeco_granaroma_rear_drain_valve":
+            return {"answer": record["possible_causes"][0], "pending_question": None}
+    return {"answer": "Brak rekordu serwisowego dla tego wycieku.", "pending_question": None}
+
+
+def first_node(state: DiagnosticState) -> str:
+    if domain_for(state):
+        return "components"
+    return "update_facts"
+
+
+def diagnose_components(state: DiagnosticState) -> dict:
+    return component_reply(state, llm)
 
 
 def build_agent():
@@ -576,7 +513,9 @@ def build_agent():
     builder.add_node("weak_match", weak_match)
     builder.add_node("answer", answer)
     builder.add_node("granaroma_rear_leak", granaroma_rear_leak_reply)
-    builder.add_edge(START, "update_facts")
+    builder.add_node("components", diagnose_components)
+    builder.add_conditional_edges(START, first_node, ["components", "update_facts"])
+    builder.add_edge("components", END)
     builder.add_edge("update_facts", "retrieve")
     builder.add_conditional_edges(
         "retrieve",

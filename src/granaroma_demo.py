@@ -8,14 +8,13 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from ollama import ResponseError
 
-from src.agent import DiagnosticState, llm
+from src.agent import DiagnosticState, granaroma_rear_leak_reply, llm
 from src.knowledge_base import load_faults, normalize
 
 
 class Interview(DiagnosticState, total=False):
     tank_side: str
     noticed_at: str
-    onset_clarified: bool
     previous_reply: str
     breaker_tripped: str
     makes_coffee: str
@@ -23,11 +22,6 @@ class Interview(DiagnosticState, total=False):
 
 
 UNKNOWN = "nie wiadomo"
-AFTER_COFFEE_QUESTION = "Czy tuż po zakończeniu parzenia widziałeś pierwsze krople, czy kałuża już tam była, kiedy spojrzałeś?"
-AFTER_COFFEE_CHOICES = {
-    "pierwsze krople": "tuż po parzeniu",
-    "kałuża już tam była": "użytkownik nie widział początku lub nie pamięta",
-}
 FIELDS = {
     "tank_side": ["od strony zbiornika", "po przeciwnej stronie", UNKNOWN],
     "leak_location": ["z tyłu ekspresu", "z boku",
@@ -51,6 +45,8 @@ LABELS = {"leak_location": "Miejsce", "tank_side": "Strona względem zbiornika",
 
 def supported_location(proposed, message, state):
     text = normalize(message)
+    if text.strip(" .!?") in ("z tylu", "z tylu ekspresu", "za ekspresem"):
+        return "z tyłu ekspresu"
     if state.get("pending_question") == "tray_position":
         if proposed in ("pod tacką", "w tacce", UNKNOWN):
             return proposed
@@ -64,6 +60,8 @@ def supported_location(proposed, message, state):
         return "bez zmiany"
     side = re.search(r"\b(bok\w*|bocz\w*)", text)
     rear = re.search(r"\b(tyl|tylu|tylem|tyln\w*)\b|\bza (ekspresem|urzadzeniem)", text)
+    if rear and not side and re.search(r"\bz tylu\b|\bza (ekspresem|urzadzeniem)", text) and not re.search(r"\b(nie|moze|albo|lub)\b", text):
+        return "z tyłu ekspresu"
     if state.get("pending_question") == "tank_side" and state.get("leak_location") == "z boku":
         side = True
     if side:
@@ -93,10 +91,6 @@ def extract_facts(state):
         selected = normalize(message).strip(" .!?")
         if selected in choices:
             return {"leak_location": choices[selected], "previous_reply": message}
-    if state.get("answer") == AFTER_COFFEE_QUESTION:
-        selected = message.strip().lower().strip(".!?")
-        if selected in AFTER_COFFEE_CHOICES:
-            return {"fault_timing": AFTER_COFFEE_CHOICES[selected], "previous_reply": message}
     properties = {}
     known = {}
     for field, values in FIELDS.items():
@@ -155,7 +149,7 @@ def extract_facts(state):
                 value = "bez zmiany"
             explicit_side = re.search(r"\bz boku\b", text)
             uncertain_side = re.search(r"\b(nie|chyba|moze|albo|lub)\b", text)
-            if value not in (UNKNOWN, "bez zmiany") or "przy tacce" in text or (explicit_side and not uncertain_side):
+            if value not in (UNKNOWN, "bez zmiany") or "z tylu" in text or "za ekspresem" in text or "przy tacce" in text or (explicit_side and not uncertain_side):
                 value = supported_location(value, message, state)
         if field == "tank_side" and not side_reference:
             explicit_unknown = value == UNKNOWN and re.search(r"\bnie (wiem|pamietam|jestem pew\w*)", text)
@@ -171,9 +165,8 @@ def extract_facts(state):
                 continue
         if value == "bez zmiany":
             continue
-        if field == "fault_timing" and value == AFTER_COFFEE_CHOICES["kałuża już tam była"]:
-            explicit_unknown = re.search(r"\bnie (wiem|pamietam|widzial\w*|zauwazyl\w*)\b", normalize(message))
-            if not explicit_unknown and not state.get("onset_clarified"):
+        if field == "fault_timing" and value == "użytkownik nie widział początku lub nie pamięta":
+            if not re.search(r"\bnie (wiem|pamietam|widzial\w*|zauwazyl\w*)\b", text):
                 continue
         # An uncertain extraction alone must not end the interview before the clarifying question.
         if value == UNKNOWN and state.get("pending_question") != field and not state.get(field):
@@ -218,7 +211,6 @@ def tray_or_tank_reply(state, location):
 
 def choose_step(state):
     location = state.get("leak_location")
-    timing = state.get("fault_timing")
     if state.get("breaker_tripped") == "tak":
         return {"pending_question": None, "answer": "Nie uruchamiaj ponownie ekspresu. Zgłoś serwisowi wyciek i zadziałanie zabezpieczenia. W tej serii jednym z tropów jest nieszczelność złączki nad grzałką: woda może zalewać grzałkę."}
     if not location:
@@ -245,22 +237,8 @@ def choose_step(state):
             if record["id"] == "saeco_granaroma_solenoid_leak":
                 causes = "; ".join(record["possible_causes"])
                 return {"pending_question": None, "answer": f"Wodę widać {location}. Tropy serwisowe: {causes}. Źródło wymaga potwierdzenia w serwisie."}
-    if location == "z tyłu ekspresu" and timing in (None, UNKNOWN) and not state.get("onset_clarified"):
-        question = QUESTIONS["fault_timing"]
-        if state.get("pending_question") == "fault_timing":
-            question = "Czy widziałeś pierwsze krople, czy kałuża już tam była, kiedy spojrzałeś?"
-            if state.get("noticed_at") == "po kawie":
-                question = AFTER_COFFEE_QUESTION
-            return {"pending_question": "fault_timing", "onset_clarified": True,
-                    "answer": question}
-        if state.get("noticed_at") == "po kawie":
-            question = "Po kawie zobaczyłeś wodę. Czy pamiętasz, kiedy pojawiły się pierwsze krople?"
-        return {"pending_question": "fault_timing", "answer": question}
-    if location == "z tyłu ekspresu" and timing in ("pod koniec parzenia", "tuż po parzeniu", "podczas płukania"):
-        for record in load_faults():
-            if record["id"] == "saeco_granaroma_hose_solenoid_leak":
-                cause = ". ".join(record["possible_causes"]).rstrip(".")
-                return {"pending_question": None, "answer": f"Wyciek z tyłu {timing}. Trop serwisowy: {cause}. Źródło wymaga potwierdzenia w serwisie."}
+    if location == "z tyłu ekspresu":
+        return granaroma_rear_leak_reply(state)
     return {"pending_question": None, "answer": "Te obserwacje nie wystarczają do zawężenia źródła wycieku."}
 
 

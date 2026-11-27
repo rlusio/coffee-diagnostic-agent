@@ -16,21 +16,7 @@ Fragment rozmowy z lokalnego demo. Użytkownik wpisał `saeco granaroma` w polu 
 >
 > **Użytkownik:** Woda z tyłu ekspresu.
 >
-> **Agent:** Woda pojawia się z tyłu ekspresu. Kiedy występuje problem?
->
-> **Użytkownik:** W trakcie płukania od razu.
->
-> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Czy przy pobieraniu gorącej wody też widzisz wyciek z tyłu ekspresu?
->
-> **Użytkownik:** Tak.
->
-> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Czy cieknie już w trakcie nalewania gorącej wody, czy dopiero na końcu, gdy strumień ustaje?
->
-> **Użytkownik:** Dopiero na końcu.
->
-> **Agent:** Wodę widać z tyłu ekspresu podczas płukania. Przy gorącej wodzie wyciek widać dopiero po odcięciu strumienia. Trop z przypadku serwisowego tej serii: Przewód zrzutowy zespołu elektrozaworów mógł wypiąć się z małego elementu obok przepływomierza. Wtedy woda przeznaczona do tacki spływa do wnętrza i może wypłynąć z tyłu ekspresu. Po jednej czarnej kawie wyciek może być niewielki, a po kawie mlecznej z płukaniem od razu może być widać więcej wody. Żeby potwierdzić źródło w tym egzemplarzu, serwis musi ustalić, z którego połączenia wypływa woda.
-
-W tym przykładzie użytkownik zaobserwował wyciek podczas dwóch czynności. W bazie dla tej serii opisano m.in. przypadek wypięcia węża z elementu obok przepływomierza. Żeby powiązać tę konkretną przyczynę ze zgłoszeniem, potrzebna jest dodatkowa obserwacja wskazująca na to połączenie.
+> **Agent:** W Saeco GranAroma wyciek z tyłu najprawdopodobniej pochodzi z zaworu spustowego. Źródło wymaga potwierdzenia w serwisie.
 
 ## Jak powstaje odpowiedź
 
